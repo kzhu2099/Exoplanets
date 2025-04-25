@@ -1,0 +1,10 @@
+Exoplanet Contribution/
+Exoplanet Discovering/
+Exotic/
+.venv/
+__pycache__/
+
+.DS_Store
+
+eaConf.json
+pl_names.json
