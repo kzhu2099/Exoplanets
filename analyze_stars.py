@@ -24,7 +24,7 @@ if __name__ == '__main__':
         print(f'No {id_type} ids available in {ids_filepath}')
         exit()
 
-    auto_folder = datetime.datetime.now().strftime(f'{parent_folder}/Mass Analysis/%Y/%B, %Y/%B %d, %Y''')
+    auto_folder = datetime.datetime.now().strftime(f'{parent_folder}/Mass Analysis/%Y/%B, %Y/%B %d, %Y')
 
     while True:
         ids.to_csv(ids_filepath, index = False)

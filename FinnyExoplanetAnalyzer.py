@@ -32,14 +32,14 @@ class FinnyExoplanetAnalyzer:
         self.auto_folder = auto_folder
 
         if auto_folder is not None and not os.path.exists(f'{auto_folder}'):
-            os.makedirs(f'{auto_folder}')
-            os.makedirs(f'{auto_folder}/tesscuts')
-            os.makedirs(f'{auto_folder}/light_curve_collections')
-            os.makedirs(f'{auto_folder}/stitched_light_curves')
-            os.makedirs(f'{auto_folder}/periodograms')
-            os.makedirs(f'{auto_folder}/folded_light_curves')
-            os.makedirs(f'{auto_folder}/transit_depths')
-            os.makedirs(f'{auto_folder}/save_data')
+            os.makedirs(f'{auto_folder}', exist_ok = True)
+            os.makedirs(f'{auto_folder}/tesscuts', exist_ok = True)
+            os.makedirs(f'{auto_folder}/light_curve_collections', exist_ok = True)
+            os.makedirs(f'{auto_folder}/stitched_light_curves', exist_ok = True)
+            os.makedirs(f'{auto_folder}/periodograms', exist_ok = True)
+            os.makedirs(f'{auto_folder}/folded_light_curves', exist_ok = True)
+            os.makedirs(f'{auto_folder}/transit_depths', exist_ok = True)
+            os.makedirs(f'{auto_folder}/save_data', exist_ok = True)
 
     def plot_tesscut(self, save_on_auto = True):
         # plot.figure(figsize = (16, 9))

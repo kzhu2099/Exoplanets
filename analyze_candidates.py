@@ -66,7 +66,7 @@ if __name__ == '__main__':
                 if len(analyzer.exoplanets) > 0 and input('Would you like to save this star\'s exoplanet(s)? ') in yes:
                     save_paths = analyzer.save(f'Exoplanet Discovering/Candidates/{analyzer.star}')
 
-                    with open('Exoplanet Discovering/candidate_paths.txt', 'a') as file:
+                    with open('Exoplanet Discovering/candidate_data_paths.txt', 'a') as file:
                         file.writelines(item + '\n' for item in save_paths)
 
                 break
