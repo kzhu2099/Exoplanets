@@ -6,7 +6,7 @@ import os
 data_paths = []
 
 with open('Exoplanet Discovering/candidate_data_paths.txt', 'r+') as file:
-    data_paths = [file_name.strip() for file_name in file.readlines()]
+    data_paths.extend([file_name.strip() for file_name in file.readlines()])
     file.seek(0)
 
 base_folder = datetime.datetime.now().strftime('Exoplanet Discovering/File Uploads/%Y/%B, %Y')
@@ -33,7 +33,7 @@ for path in data_paths:
 
     e.calculate_attributes()
 
-    e.to_json(f'Exoplanet Discovering/CTOI JSON/{e.host_star['name']} Exoplanet b.json')
+    e.to_json(f'Exoplanet Discovering/CTOI JSON/{e.host_star['name']} Exoplanet {e.letter}.json')
 
     with open(planet_params_path, 'a') as file:
         file.write(e.csv_string + '\n')

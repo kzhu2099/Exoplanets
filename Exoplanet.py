@@ -6,6 +6,7 @@ class Exoplanet:
     def __init__(self, host_star_name, letter = 'b'):
         if host_star_name != '' and letter != '':
             self.host_star = {'name': host_star_name}
+            self.letter = letter
             self.name = f'{host_star_name} {letter}'
             self.id_num = int(host_star_name.split(' ')[1])
 
@@ -38,6 +39,7 @@ class Exoplanet:
     def to_json(self, filepath):
         attributes = {attr: getattr(self, attr) for attr in self.__dict__}
         result = json.dumps(attributes, indent = 4, sort_keys = True)
+        result = result.replace('NaN', 'null')
 
         if filepath is not None:
             with open(filepath, 'w') as file:
@@ -109,6 +111,7 @@ class Exoplanet:
         self.csv_string = \
         '{target}|{flag}|{disp}|{period}|{period_unc}|{epoch}|{epoch_unc}|{depth}|{depth_unc}|{duration}|{duration_unc}|||||' \
         '{r_planet}||||{radius}||{mass}||{temp}||||||{sma}||||||||||{tag}||0|From TCE reviewed by Kevin Zhu'.format(**self.parameters)
+        self.csv_string = self.csv_string.replace('NaN', 'null')
 
     def remove_nan_parameters(self):
         for key, value in self.parameters.items():

@@ -2,8 +2,26 @@ from FinnyExoplanetAnalyzer import FinnyExoplanetAnalyzer
 import time
 import numpy
 
-candidates = [
-    295440174
+candidates = \
+[
+# 284611896,
+# 55655482,
+# 268290940,
+# 176871438,
+# 38850860,
+# 62573638,
+# 102625324,
+# 279322914,
+# 55727842,
+# 342556321,
+# 23689332,
+# 73248090,
+297701617,
+76903841,
+270462117,
+441444256,
+90083037,
+234518605,
 ]
 
 use_tesscuts = False
@@ -65,7 +83,7 @@ if __name__ == '__main__':
             else:
                 if len(analyzer.exoplanets) > 0 and input('Would you like to save this star\'s exoplanet(s)? ') in yes:
                     save_paths = analyzer.save(f'Exoplanet Discovering/Candidates/{analyzer.star}')
-
+                    print(save_paths)
                     with open('Exoplanet Discovering/candidate_data_paths.txt', 'a') as file:
                         file.writelines(item + '\n' for item in save_paths)
 
