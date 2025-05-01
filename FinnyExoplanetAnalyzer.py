@@ -95,7 +95,7 @@ class FinnyExoplanetAnalyzer:
             self.pixel_files = self.search_result.download_all(cutout_size = 7)
 
         else:
-            self.search_result = search_targetpixelfile(self.star, mission = 'TESS', cadence = 'long', limit = 20)
+            self.search_result = search_targetpixelfile(self.star, mission = 'TESS', cadence = 'long', limit = 10)
 
             if len(self.search_result) == 0:
                 self.search_result = search_targetpixelfile(self.star)
