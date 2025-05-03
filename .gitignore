@@ -1,7 +1,8 @@
 Exoplanet Contribution/
 Exoplanet Discovering/
 !Exoplanet Discovering/uploaded_ctois.csv
-!Exoplanet Discovering/Paper Materials
+!Exoplanet Discovering/Paper Materials/
+!Exoplanet Discovering/Paper Materials/**
 
 Exotic/
 .venv/
