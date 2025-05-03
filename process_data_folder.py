@@ -2,11 +2,12 @@ import os
 import json
 import shutil
 
-paths = ['Exoplanet Contribution/2025/April 2025/TrES-3_2019-MARCH-23', 'Exoplanet Contribution/2025/April 2025/WASP-43_2019-MARCH-08']
+paths = ['Exoplanet Contribution/2025/May 2025/HATP-10_2017-DECEMBER-12',
+'Exoplanet Contribution/2025/May 2025/Qatar-2_2019-MAY-28']
 
 for path in paths:
     data = os.path.basename(path).split('_')
-    '''
+
     os.makedirs(f'{path}/output')
     os.makedirs(f'{path}/fits')
 
@@ -14,7 +15,7 @@ for path in paths:
         if filename.endswith('.FITS.gz'):
             source = os.path.join(path, filename)
             new = os.path.join(path + '/fits', filename)
-            shutil.move(source, new)'''
+            shutil.move(source, new)
 
     inits = {
         'inits_guide': {
@@ -70,5 +71,5 @@ for path in paths:
         }
     }
 
-    with open(f'{path}/.json', 'w') as file:
+    with open(f'{path}/inits.json', 'w') as file:
         file.write(json.dumps(inits, indent = 4))

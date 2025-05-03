@@ -1,6 +1,6 @@
 from Exoplanet import Exoplanet
 import datetime
-import pandas
+from astroquery.mast import Catalogs
 import os
 
 data_paths = []
@@ -22,13 +22,12 @@ for i in range(1, 100):
 for path in data_paths:
     e = Exoplanet.load_from_json(path)
 
-    url = f'https://exofop.ipac.caltech.edu/tess/download_stellar.php?id={e.id_num}'
-    data = pandas.read_csv(url, delimiter = '|')
+    data = Catalogs.query_object(f'TIC {e.id_num}', catalog = 'TIC')[0]
 
     e.add_host_star_attributes(
-        radius = data['Radius (R_Sun)'].to_list()[0],
-        mass = data['Mass (M_Sun)'].to_list()[0],
-        teff = data['Teff (K)'].to_list()[0]
+        radius = data['rad'],
+        mass = data['mass'],
+        teff = data['Teff']
     )
 
     e.calculate_attributes()

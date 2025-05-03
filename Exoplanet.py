@@ -112,6 +112,7 @@ class Exoplanet:
         '{target}|{flag}|{disp}|{period}|{period_unc}|{epoch}|{epoch_unc}|{depth}|{depth_unc}|{duration}|{duration_unc}|||||' \
         '{r_planet}||||{radius}||{mass}||{temp}||||||{sma}||||||||||{tag}||0|From TCE reviewed by Kevin Zhu'.format(**self.parameters)
         self.csv_string = self.csv_string.replace('NaN', 'null')
+        self.csv_string = self.csv_string.replace('nan', 'null')
 
     def remove_nan_parameters(self):
         for key, value in self.parameters.items():
