@@ -1,6 +1,8 @@
 import json
 import math
 import datetime
+import numpy
+import pickle
 
 class Exoplanet:
     def __init__(self, host_star_name, letter = 'b'):
@@ -69,7 +71,7 @@ class Exoplanet:
         self.r_planet_over_star = math.sqrt(self.transit_depth)
         self.radius = self.host_star['r_earth'] * self.r_planet_over_star
 
-        self.mass = self.radius ** 3
+        self.mass = self.predict_mass(self.radius)
 
         self.semi_major_axis_meters = (
             (((self.period * DAY_SECOND) ** 2) * (6.674 * 10 ** -11) * (self.host_star['mass'] * SMASS_KG)) /
@@ -111,8 +113,19 @@ class Exoplanet:
         self.csv_string = \
         '{target}|{flag}|{disp}|{period}|{period_unc}|{epoch}|{epoch_unc}|{depth}|{depth_unc}|{duration}|{duration_unc}|||||' \
         '{r_planet}||||{radius}||{mass}||{temp}||||||{sma}||||||||||{tag}||0|From TCE reviewed by Kevin Zhu'.format(**self.parameters)
-        self.csv_string = self.csv_string.replace('NaN', 'null')
-        self.csv_string = self.csv_string.replace('nan', 'null')
+        self.csv_string = self.csv_string.replace('NaN', '')
+        self.csv_string = self.csv_string.replace('nan', '')
+
+    def get_spline(self): # cannot add to attributes since json serializable
+        with open('radius_mass_spline.pkl', 'rb') as file:
+            model = pickle.load(file)
+
+        return model
+
+    def predict_mass(self, radius):
+        spline = self.get_spline()
+
+        return 10 ** spline(numpy.log10(radius))
 
     def remove_nan_parameters(self):
         for key, value in self.parameters.items():
