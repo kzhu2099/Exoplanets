@@ -1,5 +1,5 @@
 {
-    "csv_string": "TIC441444256.01|newctoi|PC|12.89914890260078|6.457737065728182|2459289.704451512|0.008113687570848458|435.9800141516823|559.9204026108187|3.092699940887563|0.19472850170036302|||||0.020880134438065343||||null||null||null||||||null||||||||||20250503_kzhu_autotag-1_441444256||0|From TCE reviewed by Kevin Zhu",
+    "csv_string": "TIC441444256.01|newctoi|PC|12.89914890260078|6.457737065728182|2459289.704451512|0.008113687570848458|435.9800141516823|559.9204026108187|3.092699940887563|0.19472850170036302|||||0.020880134438065343||||None||None||None||||||None||||||||||20250504_kzhu_autotag-1_441444256||0|From TCE reviewed by Kevin Zhu",
     "epoch": 2459289.704451512,
     "exoplanet_num": 1,
     "flux_unc": 0.0005559031600936999,
@@ -11,6 +11,7 @@
         "teff": null
     },
     "id_num": 441444256,
+    "impact_parameter": null,
     "letter": "b",
     "mass": null,
     "name": "TIC 441444256 b",
@@ -23,13 +24,14 @@
         "epoch": 2459289.704451512,
         "epoch_unc": 0.008113687570848458,
         "flag": "newctoi",
+        "imp": null,
         "mass": null,
         "period": 12.89914890260078,
         "period_unc": 6.457737065728182,
         "r_planet": 0.020880134438065343,
         "radius": null,
         "sma": null,
-        "tag": "20250503_kzhu_autotag-1_441444256",
+        "tag": "20250504_kzhu_autotag-1_441444256",
         "target": "TIC441444256.01",
         "temp": null
     },
@@ -41,6 +43,7 @@
     "semi_major_axis_au": null,
     "semi_major_axis_meters": null,
     "signal_to_noise_ratio": 15.882112345559108,
+    "sma_over_r_star": null,
     "t_equilibrium": null,
     "transit_depth": 0.0004359800141516823,
     "transit_depth_ppm": 435.9800141516823,
