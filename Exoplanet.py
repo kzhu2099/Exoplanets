@@ -78,7 +78,9 @@ class Exoplanet:
         self.r_planet_over_star = math.sqrt(self.transit_depth)
         self.radius = self.host_star['r_earth'] * self.r_planet_over_star
 
-        self.mass = self.predict_mass(self.radius)
+        self.mass, self.min_mass, self.max_mass = self.predict_mass(self.radius)
+        self.mass_unc_lower = self.min_mass - self.mass
+        self.mass_unc_higher = self.max_mass - self.mass
 
         self.semi_major_axis_meters = (
             (((self.period * DAY_SECOND) ** 2) * (6.674 * 10 ** -11) * (self.host_star['mass'] * SMASS_KG)) /
@@ -104,6 +106,8 @@ class Exoplanet:
             'r_planet': self.r_planet_over_star,
             'radius': self.radius,
             'mass': self.mass,
+            'mass_unc_lower': self.mass_unc_lower,
+            'mass_unc_higher': self.mass_unc_higher,
             'temp': self.t_equilibrium,
             'sma': self.semi_major_axis_au,
             }
@@ -199,15 +203,18 @@ class Exoplanet:
         return self.model_params
 
     def get_spline(self): # cannot add to attributes since json serializable
-        with open('radius_mass_spline.pkl', 'rb') as file:
+        with open('RM Model/cand_radius_mass_spline.pkl', 'rb') as file:
             model = pickle.load(file)
 
         return model
 
     def predict_mass(self, radius):
         spline = self.get_spline()
+        y = spline(numpy.log10(radius))
+        y_min = y - spline.spread
+        y_max = y + spline.spread
 
-        return 10 ** spline(numpy.log10(radius))
+        return numpy.power(10, [y, y_min, y_max])
 
     def remove_none(self, obj = None):
         if obj is None:
