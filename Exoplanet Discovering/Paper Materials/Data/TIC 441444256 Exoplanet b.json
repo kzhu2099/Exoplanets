@@ -1,12 +1,16 @@
 {
-    "csv_string": "TIC441444256.01|newctoi|PC|12.89914890260078|6.457737065728182|2459289.704451512|0.008113687570848458|435.9800141516823|559.9204026108187|3.092699940887563|0.19472850170036302|||||0.020880134438065343||||None||None||None||||||None||||||||||20250504_kzhu_autotag-1_441444256||0|From TCE reviewed by Kevin Zhu",
+    "csv_string": "TIC441444256.01|newctoi|PC|12.89914890260078|6.457737065728182|2459289.704451512|0.008113687570848458|435.9800141516823|559.9204026108187|3.092699940887563|0.19472850170036302|||||0.020880134438065343||||||||||||||||||||||||20250504_kzhu_autotag-1_441444256||0|From TCE reviewed by Kevin Zhu",
     "epoch": 2459289.704451512,
     "exoplanet_num": 1,
     "flux_unc": 0.0005559031600936999,
     "host_star": {
+        "dec": -54.4239554872901,
+        "logg": null,
+        "lum": null,
         "mass": null,
         "name": "TIC 441444256",
         "r_earth": null,
+        "ra": 145.373056282865,
         "radius": null,
         "teff": null
     },
@@ -14,17 +18,27 @@
     "impact_parameter": null,
     "letter": "b",
     "mass": null,
+    "model_params": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
     "name": "TIC 441444256 b",
     "parameters": {
+        "arg_peri": null,
         "depth": 435.9800141516823,
         "depth_unc": 559.9204026108187,
         "disp": "PC",
         "duration": 3.092699940887563,
         "duration_unc": 0.19472850170036302,
+        "ecc": null,
         "epoch": 2459289.704451512,
         "epoch_unc": 0.008113687570848458,
         "flag": "newctoi",
         "imp": null,
+        "inc": null,
         "mass": null,
         "period": 12.89914890260078,
         "period_unc": 6.457737065728182,
@@ -33,7 +47,9 @@
         "sma": null,
         "tag": "20250504_kzhu_autotag-1_441444256",
         "target": "TIC441444256.01",
-        "temp": null
+        "temp": null,
+        "u1": null,
+        "u2": null
     },
     "period": 12.89914890260078,
     "period_fwhm": 12.915474131456364,

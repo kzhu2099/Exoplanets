@@ -1,12 +1,16 @@
 {
-    "csv_string": "TIC284611896.01|newctoi|PC|8.184483907713576|6.139543460102896|2458770.3239829293|0.012881034015765312|4450.133972372594|800.5636550743299|6.0831667713115625|0.30914481637836755|||||0.06670932447846098||||None||None||None||||||None||||||||||20250504_kzhu_autotag-1_284611896||0|From TCE reviewed by Kevin Zhu",
+    "csv_string": "TIC284611896.01|newctoi|PC|8.184483907713576|6.139543460102896|2458770.3239829293|0.012881034015765312|4450.133972372594|800.5636550743299|6.0831667713115625|0.30914481637836755|||||0.06670932447846098||||||||||||||||||||||||20250504_kzhu_autotag-1_284611896||0|From TCE reviewed by Kevin Zhu",
     "epoch": 2458770.3239829293,
     "exoplanet_num": 1,
     "flux_unc": 0.0007666586839666145,
     "host_star": {
+        "dec": 61.6445432810237,
+        "logg": null,
+        "lum": null,
         "mass": null,
         "name": "TIC 284611896",
         "r_earth": null,
+        "ra": 10.175972549869,
         "radius": null,
         "teff": 10637.0
     },
@@ -14,17 +18,27 @@
     "impact_parameter": null,
     "letter": "b",
     "mass": null,
+    "model_params": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
     "name": "TIC 284611896 b",
     "parameters": {
+        "arg_peri": null,
         "depth": 4450.133972372594,
         "depth_unc": 800.5636550743299,
         "disp": "PC",
         "duration": 6.0831667713115625,
         "duration_unc": 0.30914481637836755,
+        "ecc": null,
         "epoch": 2458770.3239829293,
         "epoch_unc": 0.012881034015765312,
         "flag": "newctoi",
         "imp": null,
+        "inc": null,
         "mass": null,
         "period": 8.184483907713576,
         "period_unc": 6.139543460102896,
@@ -33,7 +47,9 @@
         "sma": null,
         "tag": "20250504_kzhu_autotag-1_284611896",
         "target": "TIC284611896.01",
-        "temp": null
+        "temp": null,
+        "u1": null,
+        "u2": null
     },
     "period": 8.184483907713576,
     "period_fwhm": 12.279086920205792,
