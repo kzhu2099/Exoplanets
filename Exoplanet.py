@@ -2,7 +2,7 @@ import json
 import math
 import datetime
 import numpy
-import pickle
+import dill
 from astroquery.mast import Catalogs
 from scipy.optimize import least_squares
 import batman
@@ -79,8 +79,9 @@ class Exoplanet:
         self.radius = self.host_star['r_earth'] * self.r_planet_over_star
 
         self.mass, self.min_mass, self.max_mass = self.predict_mass(self.radius)
-        self.mass_unc_lower = self.min_mass - self.mass
+        self.mass_unc_lower = self.mass - self.min_mass
         self.mass_unc_higher = self.max_mass - self.mass
+        self.mass_unc = numpy.abs(self.mass_unc_higher + self.mass_unc_lower) / 2
 
         self.semi_major_axis_meters = (
             (((self.period * DAY_SECOND) ** 2) * (6.674 * 10 ** -11) * (self.host_star['mass'] * SMASS_KG)) /
@@ -108,6 +109,7 @@ class Exoplanet:
             'mass': self.mass,
             'mass_unc_lower': self.mass_unc_lower,
             'mass_unc_higher': self.mass_unc_higher,
+            'mass_unc': self.mass_unc,
             'temp': self.t_equilibrium,
             'sma': self.semi_major_axis_au,
             }
@@ -123,7 +125,7 @@ class Exoplanet:
 
         self.csv_string = \
         '{target}|{flag}|{disp}|{period}|{period_unc}|{epoch}|{epoch_unc}|{depth}|{depth_unc}|{duration}|{duration_unc}|||{imp}||' \
-        '{r_planet}||||{radius}||{mass}||{temp}||||||{sma}||{ecc}||{arg_peri}||||||{tag}||0|From TCE reviewed by Kevin Zhu'.format(**self.parameters)
+        '{r_planet}||||{radius}||{mass}|{mass_unc}|{temp}||||||{sma}||{ecc}||{arg_peri}||||||{tag}||0|From TCE reviewed by Kevin Zhu'.format(**self.parameters)
 
         self.csv_string = self.csv_string.replace('NaN', '')
         self.csv_string = self.csv_string.replace('nan', '')
@@ -203,8 +205,8 @@ class Exoplanet:
         return self.model_params
 
     def get_spline(self): # cannot add to attributes since json serializable
-        with open('RM Model/cand_radius_mass_spline.pkl', 'rb') as file:
-            model = pickle.load(file)
+        with open('radius_mass_spline.pkl', 'rb') as file:
+            model = dill.load(file)
 
         return model
 
