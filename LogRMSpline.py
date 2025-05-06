@@ -33,11 +33,11 @@ class LogRMSpline:
         if self.x_min is not None:
             # cand: -0.24847484748474846, 0.037222357827663796
             # conf: -0.27340234023402343, -0.012958092354665158
-            values = numpy.where(x < self.x_min, self.y_min - (self.x_min - x), values)
+            values = numpy.where(x < self.x_min, self.y_min - 3.7 * (self.x_min - x), values)
 
         if self.x_max is not None:
             # cand: -0.28082808280828087, 0.07569592990185732
-            values = numpy.where(x > self.x_max, self.y_max, values)
+            values = numpy.where(x > self.x_max, self.y_max + (x - self.x_max) / x, values)
 
         return values
 
