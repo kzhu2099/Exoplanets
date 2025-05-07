@@ -2,7 +2,7 @@ import json
 import math
 import datetime
 import numpy
-import dill
+import pickle
 from astroquery.mast import Catalogs
 from scipy.optimize import least_squares
 import batman
@@ -206,7 +206,7 @@ class Exoplanet:
 
     def get_model(self): # cannot add to attributes since json serializable
         with open('radius_mass_model.pkl', 'rb') as file:
-            model = dill.load(file)
+            model = pickle.load(file)
 
         return model
 
