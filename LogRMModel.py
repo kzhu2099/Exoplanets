@@ -35,7 +35,7 @@ class LogRMModel:
 
         if self.x_max is not None:
             # cand: -0.28082808280828087, 0.07569592990185732
-            values = numpy.where(x > self.x_max, (1 / 0.881) * numpy.log10((10 ** x) / 0.00517), values)
+            values = numpy.where(x > self.x_max, (1 / 0.881) * numpy.log10((10 ** x) / 0.00157), values)
 
         return values
 
