@@ -204,17 +204,17 @@ class Exoplanet:
 
         return self.model_params
 
-    def get_spline(self): # cannot add to attributes since json serializable
-        with open('radius_mass_spline.pkl', 'rb') as file:
+    def get_model(self): # cannot add to attributes since json serializable
+        with open('radius_mass_model.pkl', 'rb') as file:
             model = dill.load(file)
 
         return model
 
     def predict_mass(self, radius):
-        spline = self.get_spline()
-        y = spline(numpy.log10(radius))
-        y_min = y - spline.spread
-        y_max = y + spline.spread
+        model = self.get_model()
+        y = model(numpy.log10(radius))
+        y_min = y - model.error
+        y_max = y + model.error
 
         return numpy.power(10, [y, y_min, y_max])
 
