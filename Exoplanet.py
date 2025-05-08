@@ -2,10 +2,10 @@ import json
 import math
 import datetime
 import numpy
-import pickle
 from astroquery.mast import Catalogs
 from scipy.optimize import least_squares
 import batman
+from ExoRM import load_model
 
 class Exoplanet:
     def __init__(self, host_star_name, letter = 'b'):
@@ -204,14 +204,9 @@ class Exoplanet:
 
         return self.model_params
 
-    def get_model(self): # cannot add to attributes since json serializable
-        with open('radius_mass_model.pkl', 'rb') as file:
-            model = pickle.load(file)
-
-        return model
-
     def predict_mass(self, radius):
-        model = self.get_model()
+        model = load_model()
+        
         y = model(numpy.log10(radius))
         y_min = y - model.error
         y_max = y + model.error
