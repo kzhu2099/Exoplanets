@@ -2,7 +2,6 @@ import json
 import math
 import datetime
 import numpy
-from astroquery.mast import Catalogs
 from scipy.optimize import least_squares
 import batman
 from ExoRM import load_model
@@ -206,7 +205,7 @@ class Exoplanet:
 
     def predict_mass(self, radius):
         model = load_model()
-        
+
         y = model(numpy.log10(radius))
         y_min = y - model.error
         y_max = y + model.error
@@ -234,8 +233,3 @@ class Exoplanet:
                     self.remove_nan(value)
                 elif isinstance(value, float) and math.isnan(value):
                     obj[key] = None
-
-    def add_stellar_parameters(self):
-        pass
-        # mast catalogs TIC
-        # see which sectors are in
