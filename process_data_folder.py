@@ -2,8 +2,7 @@ import os
 import json
 import shutil
 
-paths = ['Exoplanet Contribution/2025/May 2025/HATP-10_2017-DECEMBER-12',
-'Exoplanet Contribution/2025/May 2025/Qatar-2_2019-MAY-28']
+paths = ['Exoplanet Contribution/2025/May, 2025/HATP-10_2019-DECEMBER-17']
 
 for path in paths:
     data = os.path.basename(path).split('_')
