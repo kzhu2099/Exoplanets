@@ -10,7 +10,7 @@ from lightkurve import search_targetpixelfile, DesignMatrix, RegressionCorrector
 from astropy.visualization import ZScaleInterval
 
 from Exoplanet import Exoplanet
-plot.style.use('finny_style.mplstyle')
+plot.style.use('seaborn-v0_8')
 # new stars: https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html
 
 class FinnyExoplanetAnalyzer:

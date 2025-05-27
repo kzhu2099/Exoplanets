@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plot
 import seaborn
 
-plot.style.use(...)
+plot.style.use('seaborn-v0_8')
 
 def pretty_plot(functions, savefig = None, close = True):
     legend = []
