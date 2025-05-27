@@ -7,6 +7,8 @@ candidates = \
 300291839
 ]
 
+parent_folder = 'Exoplanet Discovering'
+
 use_tesscuts = False
 
 no = ['no', 'NO', 'n', 'N']
@@ -19,7 +21,7 @@ if __name__ == '__main__':
     for i in range(len(candidates)):
         star_id = f'TIC {candidates[i]}'
 
-        analyzer = FinnyExoplanetAnalyzer(f'{star_id}', use_tesscuts = use_tesscuts, auto_mode = True, auto_folder = f'Exoplanet Discovering/Candidates/{star_id}')
+        analyzer = FinnyExoplanetAnalyzer(f'{star_id}', use_tesscuts = use_tesscuts, auto_mode = True, auto_folder = f'{parent_folder}/Candidates/{star_id}')
 
         print('-' * 50)
         print(f'Requesting data for {star_id} ({i + 1} / {len(candidates)}).')
@@ -65,9 +67,9 @@ if __name__ == '__main__':
 
             else:
                 if len(analyzer.exoplanets) > 0 and input('Would you like to save this star\'s exoplanet(s)? ') in yes:
-                    save_paths = analyzer.save(f'Exoplanet Discovering/Candidates/{analyzer.star}')
+                    save_paths = analyzer.save(f'{parent_folder}/Candidates/{analyzer.star}')
                     print(save_paths)
-                    with open('Exoplanet Discovering/candidate_data_paths.txt', 'a') as file:
+                    with open(f'{parent_folder}/candidate_data_paths.txt', 'a') as file:
                         file.writelines(item + '\n' for item in save_paths)
 
                 break

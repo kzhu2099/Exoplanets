@@ -3,7 +3,7 @@ import seaborn
 
 plot.style.use(...)
 
-def pretty_print(functions, savefig = None, close = True):
+def pretty_plot(functions, savefig = None, close = True):
     legend = []
     for args, kwargs, name in functions:
         legend.append(name)
@@ -11,6 +11,6 @@ def pretty_print(functions, savefig = None, close = True):
 
     if savefig is not None:
         plot.savefig(savefig[0], **savefig[1:])
-        
+
     if close:
         plot.close()
