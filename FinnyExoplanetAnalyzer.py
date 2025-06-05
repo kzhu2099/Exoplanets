@@ -14,7 +14,7 @@ plot.style.use('seaborn-v0_8')
 # new stars: https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html
 
 class FinnyExoplanetAnalyzer:
-    def __init__(self, star, use_tesscuts = True, auto_mode = False, auto_folder = None):
+    def __init__(self, star, auto_mode = False, auto_folder = None):
         self.star = star
         self.exoplanets = {}
         self.exoplanet_letter = 'b'
@@ -26,20 +26,17 @@ class FinnyExoplanetAnalyzer:
         self.models = {}
         self.model_dfs = {}
 
-        self.use_tesscuts = use_tesscuts
-
         self.auto_mode = auto_mode
         self.auto_folder = auto_folder
 
-        if auto_folder is not None and not os.path.exists(f'{auto_folder}'):
-            os.makedirs(f'{auto_folder}', exist_ok = True)
-            os.makedirs(f'{auto_folder}/tesscuts', exist_ok = True)
-            os.makedirs(f'{auto_folder}/light_curve_collections', exist_ok = True)
-            os.makedirs(f'{auto_folder}/stitched_light_curves', exist_ok = True)
-            os.makedirs(f'{auto_folder}/periodograms', exist_ok = True)
-            os.makedirs(f'{auto_folder}/folded_light_curves', exist_ok = True)
-            os.makedirs(f'{auto_folder}/transit_depths', exist_ok = True)
-            os.makedirs(f'{auto_folder}/save_data', exist_ok = True)
+        if auto_folder is not None and not os.path.exists(f'{self.auto_folder}'):
+            os.makedirs(f'{self.auto_folder}', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/light_curve_collections', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/stitched_light_curves', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/periodograms', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/folded_light_curves', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/transit_depths', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/save_data', exist_ok = True)
 
     def plot_tesscut(self, save_on_auto = True):
         # plot.figure(figsize = (16, 9))
@@ -80,27 +77,22 @@ class FinnyExoplanetAnalyzer:
 
         else:
             if save_on_auto:
+                if not os.path.exists(f'{self.auto_folder}/tesscuts'):
+                    os.makedirs(f'{self.auto_folder}/tesscuts', exist_ok = True)
+
                 plot.savefig(f'{self.auto_folder}/tesscuts/{plot.gca().get_title()} @{datetime.datetime.now()}.png', dpi = 100)
 
             plot.close()
 
         exit()
 
-    def create_light_curve(self):
-        if self.use_tesscuts:
-            self.search_result = lightkurve.search_tesscut(self.star)
-            if self.search_result is None:
-                return None
+    def create_light_curve(self, limit = 5):
+        self.search_result = search_targetpixelfile(self.star, mission = 'TESS', cadence = 'long', limit = limit)
 
-            self.pixel_files = self.search_result.download_all(cutout_size = 7)
+        if len(self.search_result) == 0:
+            self.search_result = search_targetpixelfile(self.star)
 
-        else:
-            self.search_result = search_targetpixelfile(self.star, mission = 'TESS', cadence = 'long', limit = 10)
-
-            if len(self.search_result) == 0:
-                self.search_result = search_targetpixelfile(self.star)
-
-            self.pixel_files = self.search_result.download_all()
+        self.pixel_files = self.search_result.download_all()
 
         self.collection = lightkurve.LightCurveCollection(None)
         collection = lightkurve.LightCurveCollection(None)
@@ -112,13 +104,8 @@ class FinnyExoplanetAnalyzer:
             try:
                 pixel_file = pixel_file[numpy.isfinite(pixel_file.flux).all(axis = (1, 2))]
 
-                if self.use_tesscuts:
-                    aperture_mask = pixel_file.create_threshold_mask(threshold = 12, reference_pixel = 'center')
-                    uncorrected_lc = pixel_file.to_lightcurve(aperture_mask = aperture_mask)
-
-                else:
-                    aperture_mask = pixel_file.pipeline_mask
-                    uncorrected_lc = pixel_file.to_lightcurve(aperture_mask = aperture_mask)
+                aperture_mask = pixel_file.pipeline_mask
+                uncorrected_lc = pixel_file.to_lightcurve(aperture_mask = aperture_mask)
 
                 self.collection.append(uncorrected_lc)
 

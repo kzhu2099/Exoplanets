@@ -7,7 +7,6 @@ import pandas
 
 successful_stars_target = 50
 successful_stars = 0
-use_tesscuts = False
 
 parent_folder = 'Exoplanet Discovering'
 id_type = 'TIC'
@@ -35,13 +34,15 @@ if __name__ == '__main__':
         completed_ids.loc[len(completed_ids)] = star_id
 
         star_id = f'{id_type} {star_id}'
-        analyzer = FinnyExoplanetAnalyzer(star_id, use_tesscuts = use_tesscuts, auto_mode = True, auto_folder = auto_folder)
+        analyzer = FinnyExoplanetAnalyzer(star_id, auto_mode = True, auto_folder = auto_folder)
 
         print('-' * 50)
         print(f'Requesting data for {star_id} ({successful_stars + 1} / {successful_stars_target}).')
 
         # analyzer.plot_tesscut()
-        light_curve = analyzer.create_light_curve()
+        
+        light_curve = analyzer.create_light_curve(limit = 5)
+
         if light_curve is None:
             print(f'Error encountered when creating a light curve for {star_id}, continuing to next star.')
             continue

@@ -9,8 +9,6 @@ candidates = \
 
 parent_folder = 'Exoplanet Discovering'
 
-use_tesscuts = False
-
 no = ['no', 'NO', 'n', 'N']
 yes = ['yes', 'YES', 'y', 'Y']
 
@@ -21,14 +19,15 @@ if __name__ == '__main__':
     for i in range(len(candidates)):
         star_id = f'TIC {candidates[i]}'
 
-        analyzer = FinnyExoplanetAnalyzer(f'{star_id}', use_tesscuts = use_tesscuts, auto_mode = True, auto_folder = f'{parent_folder}/Candidates/{star_id}')
+        analyzer = FinnyExoplanetAnalyzer(f'{star_id}', auto_mode = True, auto_folder = f'{parent_folder}/Candidates/{star_id}')
 
         print('-' * 50)
         print(f'Requesting data for {star_id} ({i + 1} / {len(candidates)}).')
 
         # analyzer.plot_tesscut()
 
-        light_curve = analyzer.create_light_curve()
+        light_curve = analyzer.create_light_curve(limit = 10)
+        
         if light_curve is None:
             print(f'Error encountered when a creating light curve for {star_id}.')
             print('Skipping this star.')
