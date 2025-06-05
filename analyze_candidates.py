@@ -4,10 +4,10 @@ import numpy
 
 candidates = \
 [
-300291839
+11799874
 ]
 
-parent_folder = 'Exoplanet Discovering'
+parent_folder = 'CTOI Creation'
 
 no = ['no', 'NO', 'n', 'N']
 yes = ['yes', 'YES', 'y', 'Y']
@@ -27,7 +27,7 @@ if __name__ == '__main__':
         # analyzer.plot_tesscut()
 
         light_curve = analyzer.create_light_curve(limit = 10)
-        
+
         if light_curve is None:
             print(f'Error encountered when a creating light curve for {star_id}.')
             print('Skipping this star.')
@@ -68,6 +68,7 @@ if __name__ == '__main__':
                 if len(analyzer.exoplanets) > 0 and input('Would you like to save this star\'s exoplanet(s)? ') in yes:
                     save_paths = analyzer.save(f'{parent_folder}/Candidates/{analyzer.star}')
                     print(save_paths)
+                    
                     with open(f'{parent_folder}/candidate_data_paths.txt', 'a') as file:
                         file.writelines(item + '\n' for item in save_paths)
 

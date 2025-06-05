@@ -1,8 +1,12 @@
-Exoplanet Discovering/
+CTOI Creation/
 
-!Exoplanet Discovering/uploaded_ctois.csv
-!Exoplanet Discovering/Paper Materials/
-!Exoplanet Discovering/Paper Materials/**
+!CTOI Creation/uploaded_ctois.csv
+!CTOI Creation/Results/
+!CTOI Creation/Results/*
+!CTOI Creation/Results/**
+!CTOI Creation/Results/Data
+!CTOI Creation/Results/Data/*
+
 
 Exotic/
 .venv/

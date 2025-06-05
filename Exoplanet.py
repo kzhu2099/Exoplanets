@@ -207,8 +207,9 @@ class Exoplanet:
         model = load_model()
 
         y = model(numpy.log10(radius))
-        y_min = y - model.error
-        y_max = y + model.error
+        error = model.error(numpy.log10(radius))
+        y_min = y - error
+        y_max = y + error
 
         return numpy.power(10, [y, y_min, y_max])
 

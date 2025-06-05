@@ -4,7 +4,7 @@ from astroquery.mast import Catalogs
 import os
 
 data_paths = []
-parent_folder = 'Exoplanet Discovering'
+parent_folder = 'CTOI Creation'
 
 with open(f'{parent_folder}/candidate_data_paths.txt', 'r+') as file:
     data_paths.extend([file_name.strip() for file_name in file.readlines()])
@@ -32,6 +32,8 @@ for path in data_paths:
     )
 
     e.calculate_attributes()
+    e.calculate_transit_model_params()
+    e.make_csv_string()
 
     e.to_json(f'{parent_folder}/CTOI JSON/{e.host_star['name']} Exoplanet {e.letter}.json')
 
