@@ -122,7 +122,7 @@ class FinnyExoplanetAnalyzer:
 
         return self.lc
 
-    def create_periodogram(self, log_searchsize = [0, 1.5, 4]):
+    def create_periodogram(self, log_searchsize = [0, 1.7, 4]):
         log_searchsize[2] = int(log_searchsize[2])
         periods = numpy.logspace(log_searchsize[0], log_searchsize[1], 10 ** log_searchsize[2], base = 10)
         durations = numpy.logspace(log_searchsize[0] - 1, log_searchsize[0] - 0.5, 10, base = 10)
