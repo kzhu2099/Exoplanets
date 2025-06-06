@@ -1,10 +1,8 @@
-CTOI Creation/
-
-!CTOI Creation/uploaded_ctois.csv
-!CTOI Creation/Results/
-!CTOI Creation/Results/**
-!CTOI Creation/Results/False Positives/
-!CTOI Creation/Results/False Positives/**
+CTOI Creation/Candidates
+# CTOI Creation/Current IDs
+CTOI Creation/Mass Analysis
+# CTOI Creation/Results
+CTOI Creation/TIC ID Data
 
 Exotic/
 .venv/
