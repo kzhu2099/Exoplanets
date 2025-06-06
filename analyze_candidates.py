@@ -4,7 +4,7 @@ import numpy
 
 candidates = \
 [
-11799874
+238229705
 ]
 
 parent_folder = 'CTOI Creation'
@@ -68,8 +68,8 @@ if __name__ == '__main__':
                 if len(analyzer.exoplanets) > 0 and input('Would you like to save this star\'s exoplanet(s)? ') in yes:
                     save_paths = analyzer.save(f'{parent_folder}/Candidates/{analyzer.star}')
                     print(save_paths)
-                    
-                    with open(f'{parent_folder}/candidate_data_paths.txt', 'a') as file:
+
+                    with open(f'{parent_folder}/queue_data_paths.txt', 'a') as file:
                         file.writelines(item + '\n' for item in save_paths)
 
                 break

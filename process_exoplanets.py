@@ -6,7 +6,7 @@ import os
 data_paths = []
 parent_folder = 'CTOI Creation'
 
-with open(f'{parent_folder}/candidate_data_paths.txt', 'r+') as file:
+with open(f'{parent_folder}/queue_data_paths.txt', 'r+') as file:
     data_paths.extend([file_name.strip() for file_name in file.readlines()])
     file.seek(0)
 
@@ -47,5 +47,5 @@ for path in data_paths:
     with open(f'{parent_folder}/mytargets.txt', 'a') as file:
         file.write(f'{e.id_num}|A|30\n')
 
-with open(f'{parent_folder}/candidate_data_paths.txt', 'r+') as file:
+with open(f'{parent_folder}/queue_data_paths.txt', 'r+') as file:
     file.truncate(0)
