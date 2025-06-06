@@ -3,6 +3,8 @@ CTOI Creation/
 !CTOI Creation/uploaded_ctois.csv
 !CTOI Creation/Results/
 !CTOI Creation/Results/**
+!CTOI Creation/Results/False Positives/
+!CTOI Creation/Results/False Positives/**
 
 Exotic/
 .venv/
