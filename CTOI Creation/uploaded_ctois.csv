@@ -2,6 +2,7 @@
 # It will continue to be updated in the future for any changes.
 # Also it should reflect the college plan doc.
 
+# Doesn't really count
 # 04-01-2025,401617111: new params but better
 # 04-01-2025,401617111,https://exofop.ipac.caltech.edu/tess/target.php?id=401617111
 # 04-04-2025,102169275: new params but alternative
@@ -9,7 +10,12 @@
 # 04-06-2025,21818238: alternative because false positive
 # 04-06-2025,21818238,https://exofop.ipac.caltech.edu/tess/target.php?id=21818238
 
+# REALLY good stuff!
 # 04-10-2025,35655828: 2 exoplanet candidates!
+# 04-10-2025,35655828,https://exofop.ipac.caltech.edu/tess/target.php?id=35655828
+# 04-10-2025,35655828,https://exofop.ipac.caltech.edu/tess/target.php?id=35655828
+# 06-06-2025,238229705: Probably the highest quality candidate yet (period outside of 10 ** 1.5) but zoom in on good / clean --> PERFECT transit!
+# 06-06-2025,238229705,https://exofop.ipac.caltech.edu/tess/target.php?id=238229705
 
 # New false positives:
 # 03-29-2025,284611896,https://exofop.ipac.caltech.edu/tess/target.php?id=284611896
