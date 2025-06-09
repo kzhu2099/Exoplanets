@@ -8,7 +8,7 @@ Exotic/
 .venv/
 __pycache__/
 
-.DS_Store
+**/.DS_Store
 
 eaConf.json
 pl_names.json
