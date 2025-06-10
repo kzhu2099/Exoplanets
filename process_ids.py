@@ -2,7 +2,7 @@ import pandas
 
 parent_folder = 'CTOI Creation'
 
-data = pandas.read_csv(f'{parent_folder}/TIC ID Data/tess80tce.csv')
+data = pandas.read_csv(f'{parent_folder}/TIC ID Data/tess_tce_70s.csv')
 
 indicies = data.groupby('ticid')['tce_period'].transform(lambda x: ((x > 10 ** 0.5) & (x < 10 ** 1.7)).all())
 data = data.loc[indicies]
