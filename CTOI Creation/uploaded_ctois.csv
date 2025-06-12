@@ -11,7 +11,7 @@
 # 04-06-2025,21818238,https://exofop.ipac.caltech.edu/tess/target.php?id=21818238
 
 # REALLY good stuff!
-# 04-10-2025,35655828: 2 exoplanet candidates!
+# 04-10-2025,35655828: 2 exoplanet candidates! --> also very high quality transits visible unfolded
 # 04-10-2025,35655828,https://exofop.ipac.caltech.edu/tess/target.php?id=35655828
 # 04-10-2025,35655828,https://exofop.ipac.caltech.edu/tess/target.php?id=35655828
 # 06-06-2025,238229705: Probably the highest quality candidate yet (period outside of 10 ** 1.5) but zoom in on good / clean --> PERFECT transit!
@@ -30,12 +30,22 @@
 # 06-12-2025,198358825,https://exofop.ipac.caltech.edu/tess/target.php?id=198358825
 # 04-12-2025,467113954,https://exofop.ipac.caltech.edu/tess/target.php?id=467113954
 # 04-04-2025,297701617,https://exofop.ipac.caltech.edu/tess/target.php?id=297701617
+# 04-01-2025,102625324,https://exofop.ipac.caltech.edu/tess/target.php?id=102625324
+# 03-30-2025,176871438,https://exofop.ipac.caltech.edu/tess/target.php?id=176871438
+# secondary transit found for this (0.25%), and the radius is too high...
+# 06-06-2025,238229705,https://exofop.ipac.caltech.edu/tess/target.php?id=238229705
+
+# NOTES:
+# This is weird in that it seems right but the star is so big. It could be a v-shaped transit that is just shrink-v-d.
+# 04-05-2025,76903841,https://exofop.ipac.caltech.edu/tess/target.php?id=76903841
+# secondary transits < 0.001 should be fine for candidates, like in 295440174
+# however, for things like 176871438, it is a false positive because the iniital transit is already small
+# Round but not v-shaped (but could be)
+# 04-02-2025,342556321,https://exofop.ipac.caltech.edu/tess/target.php?id=342556321
 
 Date,TIC ID,link
 03-30-2025,55655482,https://exofop.ipac.caltech.edu/tess/target.php?id=55655482
-03-30-2025,176871438,https://exofop.ipac.caltech.edu/tess/target.php?id=176871438
 04-01-2025,38850860,https://exofop.ipac.caltech.edu/tess/target.php?id=38850860
-04-01-2025,102625324,https://exofop.ipac.caltech.edu/tess/target.php?id=102625324
 04-01-2025,279322914,https://exofop.ipac.caltech.edu/tess/target.php?id=279322914
 04-02-2025,55727842,https://exofop.ipac.caltech.edu/tess/target.php?id=55727842
 04-02-2025,342556321,https://exofop.ipac.caltech.edu/tess/target.php?id=342556321
@@ -50,4 +60,3 @@ Date,TIC ID,link
 04-24-2025,295440174,https://exofop.ipac.caltech.edu/tess/target.php?id=295440174
 04-30-2025,300291839,https://exofop.ipac.caltech.edu/tess/target.php?id=300291839
 06-05-2025,11799874,https://exofop.ipac.caltech.edu/tess/target.php?id=11799874
-06-06-2025,238229705,https://exofop.ipac.caltech.edu/tess/target.php?id=238229705
