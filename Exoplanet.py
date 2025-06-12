@@ -148,7 +148,7 @@ class Exoplanet:
 
         return model_flux
 
-    def calculate_transit_model_params(self, lightcurve):
+    def calculate_all_parameters(self, lightcurve):
         self.calculate_attributes() # get initial guesses
         if all(x is not None and not math.isnan(x) for x in [self.period, self.transit_time, self.r_planet_over_star, self.sma_over_r_star]):
             def error(params, t, flux, flux_err, constants):
