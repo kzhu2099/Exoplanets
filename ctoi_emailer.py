@@ -24,6 +24,7 @@ for ticid in ticids:
 
     data = pandas.concat([data, pandas.read_csv(url, delimiter = '|')])
 
+data['Name'] = data['Name'] + ': ' + data['Table']
 data = data.sort_values('Name')
 data = data.drop_duplicates('Tag')
 data = data.set_index('Name')
@@ -55,7 +56,10 @@ html = '''\
         </style>
     </head>
     <body>''' + \
-        data.to_html() + '''
+        data.style.set_table_styles([
+            {'selector': 'table', 'props': [('border', 'none'), ('border-collapse', 'collapse')]},
+            {'selector': 'th, td', 'props': [('border', '1px solid #ddd'), ('padding', '10px')]}
+        ]).to_html() + '''
     </body>
 </html>
 '''
