@@ -46,7 +46,7 @@
 # This is weird in that it seems right but the star is so big. It could be a v-shaped transit that is just shrink-v-d.
 # 04-05-2025,76903841,https://exofop.ipac.caltech.edu/tess/target.php?id=76903841
 # secondary transits < 0.0005 --> basically invisible
-# however, for things like 176871438 or 295440174 it is a false positive because the iniital transit is already small
+# however, for things like 176871438 or 295440174 it is a false positive because the inital transit is already small
 # Round but not v-shaped (but could be)
 # 04-02-2025,342556321,https://exofop.ipac.caltech.edu/tess/target.php?id=342556321
 
