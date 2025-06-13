@@ -37,9 +37,10 @@
 # 04-10-2025,35655828,https://exofop.ipac.caltech.edu/tess/target.php?id=35655828
 # 04-10-2025,35655828,https://exofop.ipac.caltech.edu/tess/target.php?id=35655828
 # 04-05-2025,76903841,https://exofop.ipac.caltech.edu/tess/target.php?id=76903841
+# 06-05-2025,11799874,https://exofop.ipac.caltech.edu/tess/target.php?id=11799874
 
 # Notes:
-# 11799874 and 11799872 are likely the same signal but I can't find any contaminants next to them that are already confirmed.
+# 11799874 and 11799872 are likely the same signal but I can't find any contaminants next to them that are already confirmed. --> only keep 11799872
 # They both have no centroid movement
 
 Date,TIC ID,link
@@ -48,4 +49,3 @@ Date,TIC ID,link
 04-12-2025,734505586,https://exofop.ipac.caltech.edu/tess/target.php?id=734505586
 04-13-2025,11799872,https://exofop.ipac.caltech.edu/tess/target.php?id=11799872
 04-30-2025,300291839,https://exofop.ipac.caltech.edu/tess/target.php?id=300291839
-06-05-2025,11799874,https://exofop.ipac.caltech.edu/tess/target.php?id=11799874
