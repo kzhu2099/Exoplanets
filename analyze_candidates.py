@@ -42,7 +42,7 @@ if __name__ == '__main__':
         # if input('Do you want to process this star? ') not in yes:
         #     continue
 
-        log_searchsize = [0.5, 1.7, 4]
+        log_searchsize = [0.2, 1.75, 4]
         analyzer.plot_stitched_light_curve(overlay_masks = False, overlay_models = False)
 
         while True:

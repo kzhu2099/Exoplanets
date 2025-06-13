@@ -5,14 +5,14 @@ import time
 
 import pandas
 
-small_period = True
+short_period = True
 
 successful_stars_target = 50
 successful_stars = 0
 
 parent_folder = 'CTOI Creation'
 id_type = 'TIC'
-ids_filepath = f'{parent_folder}/Current IDs/tic_ids_60_69_' + ('small_period.csv' if small_period else 'large_period.csv')
+ids_filepath = f'{parent_folder}/Current IDs/tic_ids_80_89_' + ('short_period.csv' if short_period else 'long_period.csv')
 completed_ids_filepath = f'{parent_folder}/Current IDs/completed_tic_ids.csv'
 
 start_time = time.time()
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         light_curve = analyzer.create_light_curve(limit = 5)
 
         if light_curve is None:
-            print(f'No data that matches filter for {star_id}, continuing to next star for efficiency.')
+            print(f'No data that matches the filter for {star_id}, continuing to next star for efficiency.')
 
             continue
 
@@ -66,7 +66,9 @@ if __name__ == '__main__':
 
         analyzer.plot_stitched_light_curve(overlay_masks = False, overlay_models = False)
 
-        log_searchsize = [0.3, 1.2, 4] if small_period else [0.5, 1.7, 4]
+        log_searchsize = [0.2, 1.2, 4] if short_period else [0.75, 1.75, 4] # buffer
+        # the short period is from 0.3 to 1, but they could be inaccurate
+        # long period includes is only long ones (1 - 1.7)
 
         analyzer.create_periodogram(log_searchsize = log_searchsize)
         analyzer.plot_periodogram()
