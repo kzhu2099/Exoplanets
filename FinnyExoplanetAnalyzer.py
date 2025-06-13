@@ -33,12 +33,13 @@ class FinnyExoplanetAnalyzer:
             os.makedirs(f'{self.auto_folder}', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/light_curve_collections', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/stitched_light_curves', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/first_light_curve', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/periodograms', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/folded_light_curves', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/transit_depths', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/save_data', exist_ok = True)
 
-    def plot_tesscut(self, save_on_auto = True):
+    def plot_tesscut(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} TESScut')
         tesscut = lightkurve.search_tesscut(self.star, sector = 24)
@@ -75,7 +76,7 @@ class FinnyExoplanetAnalyzer:
             plot.show()
 
         else:
-            if save_on_auto:
+            if save_in_auto:
                 if not os.path.exists(f'{self.auto_folder}/tesscuts'):
                     os.makedirs(f'{self.auto_folder}/tesscuts', exist_ok = True)
 
@@ -184,7 +185,31 @@ class FinnyExoplanetAnalyzer:
 
         return self.folded_model
 
-    def plot_collection(self, save_on_auto = True):
+    def plot_first_light_curve(self, save_in_auto = True):
+        plot.title(f'{self.star} First Light Curve')
+
+        legend = [f'{self.star} first light curve']
+        lc = self.collection[0]
+        lc_df = lc.to_pandas()
+        plot.scatter(lc_df.index, lc_df['flux'], s = 1)
+
+        plot.xlabel('Time (BJD - 2457000)')
+        plot.ylabel(r'Flux (e$^{-}$s$^{-1}$)')
+
+        plot.legend(legend)
+
+        if not self.auto_mode:
+            plot.show()
+
+        else:
+            if save_in_auto:
+                self.savefig('first_light_curve')
+
+            plot.close()
+
+        time.sleep(0.1)
+
+    def plot_collection(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} Light Curve Collection')
 
@@ -205,14 +230,14 @@ class FinnyExoplanetAnalyzer:
             plot.show()
 
         else:
-            if save_on_auto:
+            if save_in_auto:
                 self.savefig('light_curve_collections')
 
             plot.close()
 
         time.sleep(0.1)
 
-    def plot_stitched_light_curve(self, overlay_masks = True, overlay_models = False, save_on_auto = True):
+    def plot_stitched_light_curve(self, overlay_masks = True, overlay_models = False, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} Light Curve')
 
@@ -245,14 +270,14 @@ class FinnyExoplanetAnalyzer:
             plot.show()
 
         else:
-            if save_on_auto:
+            if save_in_auto:
                 self.savefig('stitched_light_curves')
 
             plot.close()
 
         time.sleep(0.1)
 
-    def plot_periodogram(self, save_on_auto = True):
+    def plot_periodogram(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} Periodogram')
 
@@ -271,14 +296,14 @@ class FinnyExoplanetAnalyzer:
             plot.show()
 
         else:
-            if save_on_auto:
+            if save_in_auto:
                 self.savefig('periodograms')
 
             plot.close()
 
         time.sleep(0.1)
 
-    def plot_folded_light_curve(self, overlay_current_model = True, overlay_bin = True, save_on_auto = True):
+    def plot_folded_light_curve(self, overlay_current_model = True, overlay_bin = True, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} Folded Light Curve')
 
@@ -304,7 +329,7 @@ class FinnyExoplanetAnalyzer:
             plot.show()
 
         else:
-            if save_on_auto:
+            if save_in_auto:
                 self.savefig('folded_light_curves')
 
             plot.close()
@@ -339,7 +364,7 @@ class FinnyExoplanetAnalyzer:
 
         return self.transit_depth
 
-    def plot_transit_depth(self, save_on_auto = True):
+    def plot_transit_depth(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} {self.exoplanet_letter} Transit Depth')
 
@@ -359,7 +384,7 @@ class FinnyExoplanetAnalyzer:
             plot.show()
 
         else:
-            if save_on_auto:
+            if save_in_auto:
                 self.savefig('transit_depths')
 
             plot.close()

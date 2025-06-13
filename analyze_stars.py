@@ -7,7 +7,7 @@ import pandas
 
 short_period = True
 
-successful_stars_target = 50
+successful_stars_target = 1
 successful_stars = 0
 
 parent_folder = 'CTOI Creation'
@@ -62,6 +62,7 @@ if __name__ == '__main__':
             print('-' * 50)
             print(f'Analyzing {star_id} ({successful_stars} / {successful_stars_target}).')
 
+        analyzer.plot_first_light_curve()
         analyzer.plot_collection()
 
         analyzer.plot_stitched_light_curve(overlay_masks = False, overlay_models = False)
@@ -99,4 +100,4 @@ if __name__ == '__main__':
     completed_ids.to_csv(completed_ids_filepath, index = False)
 
     print('Thank you for using the Finny Exoplanet Analyzer.')
-    print(f'Automatic analysis of stars {successful_stars} completed after {time.time() - start_time:.3f} seconds')
+    print(f'Automatic analysis of {successful_stars} stars completed after {time.time() - start_time:.3f} seconds')

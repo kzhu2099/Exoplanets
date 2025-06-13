@@ -37,6 +37,7 @@ if __name__ == '__main__':
             print('-' * 50)
             print(f'Analyzing {star_id} ({i + 1} / {len(candidates)}).')
 
+        analyzer.plot_first_light_curve()
         analyzer.plot_collection()
 
         # if input('Do you want to process this star? ') not in yes:
