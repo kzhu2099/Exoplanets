@@ -7,12 +7,12 @@ import pandas
 
 short_period = True
 
-successful_stars_target = 1
+successful_stars_target = 50
 successful_stars = 0
 
 parent_folder = 'CTOI Creation'
 id_type = 'TIC'
-ids_filepath = f'{parent_folder}/Current IDs/tic_ids_80_89_' + ('short_period.csv' if short_period else 'long_period.csv')
+ids_filepath = f'{parent_folder}/Current IDs/tic_ids_60_69_' + ('short_period.csv' if short_period else 'long_period.csv')
 completed_ids_filepath = f'{parent_folder}/Current IDs/completed_tic_ids.csv'
 
 start_time = time.time()
