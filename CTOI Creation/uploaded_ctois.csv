@@ -1,7 +1,7 @@
 # This is a list of CTOIS that Kevin Zhu has uploaded so far.
 # It will continue to be updated in the future for any changes.
 # Also it should reflect the college plan doc.
-
+--------
 # Doesn't really count
 # 04-01-2025,401617111: new params but better
 # 04-01-2025,401617111,https://exofop.ipac.caltech.edu/tess/target.php?id=401617111
@@ -9,7 +9,7 @@
 # 04-04-2025,102169275,https://exofop.ipac.caltech.edu/tess/target.php?id=102169275
 # 04-06-2025,21818238: alternative because false positive
 # 04-06-2025,21818238,https://exofop.ipac.caltech.edu/tess/target.php?id=21818238
-
+--------
 # New false positives:
 # 03-29-2025,284611896,https://exofop.ipac.caltech.edu/tess/target.php?id=284611896
 # 03-30-2025,268290940,https://exofop.ipac.caltech.edu/tess/target.php?id=268290940
@@ -42,11 +42,9 @@
 # 04-12-2025,734505586,https://exofop.ipac.caltech.edu/tess/target.php?id=734505586
 # 03-30-2025,55655482,https://exofop.ipac.caltech.edu/tess/target.php?id=55655482
 # 04-13-2025,11799872,https://exofop.ipac.caltech.edu/tess/target.php?id=11799872
-
+--------
 # Notes:
-# 11799874 and 11799872 are likely the same signal but I can't find any contaminants next to them that are already confirmed. --> only keep 11799872
-# They both have no centroid movement
-# Only solid one is 734505586 with 0 issues. No, it is a duplicate according to https://tev.mit.edu/items/218902
-
+# 300291839 is very faint and hard to see.
+-------
 Date,TIC ID,link
 04-30-2025,300291839,https://exofop.ipac.caltech.edu/tess/target.php?id=300291839
