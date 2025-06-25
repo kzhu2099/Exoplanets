@@ -4,7 +4,7 @@ import datetime
 import numpy
 from scipy.optimize import least_squares
 import batman
-from ExoRM import load_model
+from ExoRM import ExoRM
 
 class Exoplanet:
     def __init__(self, host_star_name, letter = 'b'):
@@ -63,27 +63,36 @@ class Exoplanet:
 
     def calculate_attributes(self):
         self.epoch = self.transit_time + 2457000
-        self.transit_depth_ppm = self.transit_depth * 10 ** 6
-        self.transit_depth_unc_ppm = self.transit_depth_unc * 10 ** 6
+        self.transit_depth_ppm = self.transit_depth * 1e6
+        self.transit_depth_unc_ppm = self.transit_depth_unc * 1e6
 
         SRADIUS_ERADIUS = 109.2
         DAY_SECOND = 86400
-        METER_AU = 6.68458712 * 10 ** -12
-        SRADIUS_METER = 6.957 * 10 ** 8
-        SMASS_KG = 1.98847 * 10 ** 30
+        METER_AU = 6.68458712e-12
+        SRADIUS_METER = 6.957e8
+        SMASS_KG = 1.98847e30
 
         self.host_star['r_earth'] = self.host_star['radius'] * SRADIUS_ERADIUS
 
-        self.r_planet_over_star = math.sqrt(self.transit_depth)
+        # Use modeled value if available
+
+        if hasattr(self, 'model_params') and self.model_params and len(self.model_params) > 5 and not math.isnan(self.model_params[5]):
+            self.r_planet_over_star = self.model_params[5]
+            self.radius_source = 'model_fit'
+
+        else:
+            self.r_planet_over_star = math.sqrt(self.transit_depth)
+            self.radius_source = 'sqrt_depth'
+
         self.radius = self.host_star['r_earth'] * self.r_planet_over_star
 
         self.mass, self.min_mass, self.max_mass = self.predict_mass(self.radius)
         self.mass_unc_lower = self.mass - self.min_mass
         self.mass_unc_higher = self.max_mass - self.mass
         self.mass_unc = numpy.abs(self.mass_unc_higher + self.mass_unc_lower) / 2
-
+ 
         self.semi_major_axis_meters = (
-            (((self.period * DAY_SECOND) ** 2) * (6.674 * 10 ** -11) * (self.host_star['mass'] * SMASS_KG)) /
+            (((self.period * DAY_SECOND) ** 2) * 6.674e-11 * (self.host_star['mass'] * SMASS_KG)) /
             (4 * math.pi ** 2)
         ) ** (1 / 3)
 
@@ -111,8 +120,7 @@ class Exoplanet:
             'mass_unc': self.mass_unc,
             'temp': self.t_equilibrium,
             'sma': self.semi_major_axis_au,
-            }
-        )
+        })
 
     def make_csv_string(self):
         self.parameters.update({
@@ -149,44 +157,54 @@ class Exoplanet:
         return model_flux
 
     def calculate_all_parameters(self, lightcurve):
-        self.calculate_attributes() # get initial guesses
+        self.calculate_attributes()
+
         if all(x is not None and not math.isnan(x) for x in [self.period, self.transit_time, self.r_planet_over_star, self.sma_over_r_star]):
             def error(params, t, flux, flux_err, constants):
-                _ = constants[:]
-                _.extend(params)
-
-                model_flux = Exoplanet.transit_model(_, t)
-
+                period, t0 = constants
+                b, ecc, w, u1, u2, rp_rs, a_rs = params
+                model_flux = Exoplanet.transit_model([period, t0, rp_rs, a_rs, b, ecc, w, u1, u2], t)
                 return (model_flux - flux) / flux_err
 
             lightcurve = lightcurve.remove_nans()
             time = lightcurve['time'].value
             flux = lightcurve['flux'].value
-            flux_err = lightcurve['flux_err'].value
-            flux_err = numpy.nan_to_num(flux_err, nan = 0)
+            flux_err = numpy.nan_to_num(lightcurve['flux_err'].value, nan=1e-6)
 
             result = least_squares(
                 error,
-                x0 = [0.5, 0, 90, 0.1, 0.3],
-                args = (time, flux, flux_err, [self.period, self.transit_time, self.r_planet_over_star, self.sma_over_r_star]),
+                x0 = [
+                    0.5,      # b
+                    0.0,      # ecc
+                    90.0,     # omega
+                    0.1, 0.3, # limb darkening
+                    self.r_planet_over_star,  # rp/rs
+                    self.sma_over_r_star      # a/rs
+                ],
+                args = (time, flux, flux_err, [self.period, self.transit_time]),
                 bounds = (
-                    [0.0, 0.0, 0.0, 0.0, 0.0],   # Lower bounds
-                    [1.5, 0.9, 360, 1.0, 1.0]    # Upper bounds
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 1.0],  # lower
+                    [1.0, 0.9, 360.0, 1.0, 1.0, 0.5, 100.0] # upper
                 )
             )
 
             self.model_params = list(result.x)
-            self.impact_parameter = self.model_params[0]
+
+            b, ecc, w, u1, u2, rp_rs, a_rs = self.model_params
+            self.impact_parameter = b
+            self.sma_over_r_star = a_rs
+            self.r_planet_over_star = rp_rs  # ensure consistency
 
             self.parameters.update({
-                'imp': self.model_params[0],
-                'inc': numpy.degrees(numpy.arccos(self.model_params[0] / self.sma_over_r_star)),
-                'ecc': self.model_params[1],
-                'arg_peri': self.model_params[2],
-                'u1': self.model_params[3],
-                'u2': self.model_params[4]
-                }
-            )
+                'imp': b,
+                'inc': numpy.degrees(numpy.arccos(b / a_rs)),
+                'ecc': ecc,
+                'arg_peri': w,
+                'u1': u1,
+                'u2': u2,
+            })
+
+            self.calculate_attributes()
 
         else:
             self.parameters.update({
@@ -196,22 +214,16 @@ class Exoplanet:
                 'arg_peri': math.nan,
                 'u1': math.nan,
                 'u2': math.nan
-                }
-            )
-
-            self.model_params = [math.nan, math.nan, math.nan, math.nan, math.nan]
+            })
+            self.model_params = [math.nan] * 7
 
         return self.model_params
 
     def predict_mass(self, radius):
-        model = load_model()
+        erm = ExoRM()
+        erm.load_trace()
 
-        y = model(numpy.log10(radius))
-        error = model.error(numpy.log10(radius))
-        y_min = y - error
-        y_max = y + error
-
-        return numpy.power(10, [y, y_min, y_max])
+        return list(float(x) for x in erm.predict_full_linear([radius]))
 
     def remove_none(self, obj = None):
         if obj is None:
