@@ -109,14 +109,14 @@ class FinnyExoplanetAnalyzer:
 
                 self.collection.append(uncorrected_lc)
 
-                design_matrix = DesignMatrix(pixel_file.flux[:, ~aperture_mask]).pca(5).append_constant()
-                lc = RegressionCorrector(uncorrected_lc).correct(design_matrix)
-                collection.append(lc.flatten(niters = 10))
+                # design_matrix = DesignMatrix(pixel_file.flux[:, ~aperture_mask]).pca(5).append_constant()
+                # lc = RegressionCorrector(uncorrected_lc).correct(design_matrix)
+                # collection.append(lc.flatten(niters = 10))
 
             except Exception as e:
                 print(e)
 
-        self.lc = collection.stitch().flatten(break_tolerance = 10, niters = 10).remove_outliers(sigma = 10)
+        self.lc = self.collection.stitch().flatten(break_tolerance = 10, niters = 10).remove_outliers(sigma = 10)
         self.lc_df = self.lc.to_pandas()
 
         self.flux_unc = self.lc_df['flux_err'].mean()
