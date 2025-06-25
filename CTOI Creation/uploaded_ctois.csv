@@ -39,14 +39,14 @@
 # 04-05-2025,76903841,https://exofop.ipac.caltech.edu/tess/target.php?id=76903841
 # 06-05-2025,11799874,https://exofop.ipac.caltech.edu/tess/target.php?id=11799874
 # 04-02-2025,55727842,https://exofop.ipac.caltech.edu/tess/target.php?id=55727842
+@ 04-12-2025,734505586,https://exofop.ipac.caltech.edu/tess/target.php?id=734505586
 
 # Notes:
 # 11799874 and 11799872 are likely the same signal but I can't find any contaminants next to them that are already confirmed. --> only keep 11799872
 # They both have no centroid movement
-# Only solid one is 734505586 with 0 issues.
+# Only solid one is 734505586 with 0 issues. No, it is a duplicate according to https://tev.mit.edu/items/218902
 
 Date,TIC ID,link
 03-30-2025,55655482,https://exofop.ipac.caltech.edu/tess/target.php?id=55655482
-04-12-2025,734505586,https://exofop.ipac.caltech.edu/tess/target.php?id=734505586
 04-13-2025,11799872,https://exofop.ipac.caltech.edu/tess/target.php?id=11799872
 04-30-2025,300291839,https://exofop.ipac.caltech.edu/tess/target.php?id=300291839
