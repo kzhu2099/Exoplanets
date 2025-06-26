@@ -1,2 +1,1 @@
 Target (CTOI ID),Period (days),Epoch (BJD_TDB - 2457000),Transit Depth (PPM),Transit Duration (hours),Disposition,Planet Radius / Stellar Radius,Radius (R⊕),Mass (M⊕),Mass Unc (M⊕),Equilibrium Temperature (K),Semi-major Axis (AU),Impact Parameter,Inclination (deg),Eccentricity,Argument of Periastron,Limb Darkening Coefficient 1,Limb Darkening Coefficient 2
-300291839.01,18.5018 ± 1.39,1339.5 ± 0.0235,1000.64 ± 425.0,4.44044 ± 0.564,PC,0.0104,2.5,9.32,"+13.9, -5.54",1150.0,0.143,0.752,88.7,0.0365,184.0,0.658,0.277
