@@ -2,6 +2,8 @@ import lightkurve
 import numpy
 import matplotlib.pyplot as plot
 import matplotlib.patches as patches
+import matplotlib
+from cycler import cycler
 import datetime
 import os
 import time
@@ -38,6 +40,11 @@ class FinnyExoplanetAnalyzer:
             os.makedirs(f'{self.auto_folder}/folded_light_curves', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/transit_depths', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/save_data', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/single_view', exist_ok = True)
+
+        matplotlib.rcParams['figure.figsize'] = (8, 6)
+        matplotlib.rcParams['font.size'] = 14
+        matplotlib.rcParams['axes.prop_cycle'] = cycler(color = ['black'] + matplotlib.rcParams['axes.prop_cycle'].by_key()['color'][1:])
 
     def plot_tesscut(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
@@ -55,7 +62,7 @@ class FinnyExoplanetAnalyzer:
 
         image = plot.imshow(pixel_file.flux[0].value, origin = 'lower', cmap = 'cividis', vmin = vmin, vmax = vmax)
         # masked_pixels = numpy.where(aperture_mask)
-        # plot.scatter(masked_pixels[1], masked_pixels[0], color = 'C1', s = 10, marker = 's', label = 'Aperture Mask')
+        # plot.scatter(masked_pixels[1], masked_pixels[0], color = 'C1', s = 20, marker = 's', label = 'Aperture Mask')
         masked_pixels = numpy.argwhere(aperture_mask)
         for y, x in masked_pixels:
             # Draw a rectangle around each masked pixel
@@ -95,28 +102,21 @@ class FinnyExoplanetAnalyzer:
         self.pixel_files = self.search_result[:limit].download_all() # precaution even though there is already a limit
 
         self.collection = lightkurve.LightCurveCollection(None)
-        collection = lightkurve.LightCurveCollection(None)
 
         if self.pixel_files is None:
             return None
 
         for pixel_file in self.pixel_files:
-            try:
-                pixel_file = pixel_file[numpy.isfinite(pixel_file.flux).all(axis = (1, 2))]
+            pixel_file = pixel_file[numpy.isfinite(pixel_file.flux).all(axis = (1, 2))]
+            uncorrected_lc = pixel_file.to_lightcurve(aperture_mask = pixel_file.pipeline_mask)
 
-                aperture_mask = pixel_file.pipeline_mask
-                uncorrected_lc = pixel_file.to_lightcurve(aperture_mask = aperture_mask)
+            self.collection.append(uncorrected_lc)
 
-                self.collection.append(uncorrected_lc)
+            # design_matrix = DesignMatrix(pixel_file.flux[:, ~aperture_mask]).pca(5).append_constant()
+            # lc = RegressionCorrector(uncorrected_lc).correct(design_matrix)
+            # collection.append(lc.flatten(niters = 20))
 
-                # design_matrix = DesignMatrix(pixel_file.flux[:, ~aperture_mask]).pca(5).append_constant()
-                # lc = RegressionCorrector(uncorrected_lc).correct(design_matrix)
-                # collection.append(lc.flatten(niters = 10))
-
-            except Exception as e:
-                print(e)
-
-        self.lc = self.collection.stitch().flatten(break_tolerance = 10, niters = 10).remove_outliers(sigma = 10)
+        self.lc = self.collection.stitch().flatten(window_length = 501, break_tolerance = 10, niters = 1, sigma = 5).remove_outliers(sigma = 5.0)
         self.lc_df = self.lc.to_pandas()
 
         self.flux_unc = self.lc_df['flux_err'].mean()
@@ -189,9 +189,10 @@ class FinnyExoplanetAnalyzer:
         plot.title(f'{self.star} First Light Curve')
 
         legend = [f'{self.star} first light curve']
+
         lc = self.collection[0]
         lc_df = lc.to_pandas()
-        plot.scatter(lc_df.index, lc_df['flux'], s = 1)
+        plot.scatter(lc_df.index, lc_df['flux'], s = 2)
 
         plot.xlabel('Time (BJD - 2457000)')
         plot.ylabel(r'Flux (e$^{-}$s$^{-1}$)')
@@ -217,7 +218,7 @@ class FinnyExoplanetAnalyzer:
 
         for i, lc in enumerate(self.collection):
             lc_df = lc.to_pandas()
-            plot.scatter(lc_df.index, lc_df['flux'], s = 1)
+            plot.scatter(lc_df.index, lc_df['flux'], s = 2)
             legend.append(f'{self.star} light curve #{i + 1}')
 
         plot.xlabel('Time (BJD - 2457000)')
@@ -237,34 +238,18 @@ class FinnyExoplanetAnalyzer:
 
         time.sleep(0.1)
 
-    def plot_stitched_light_curve(self, overlay_masks = True, overlay_models = False, save_in_auto = True):
+    def plot_stitched_light_curve(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} Light Curve')
 
-        plot.scatter(self.lc_df.index, self.lc_df['flux'], s = 1)
+        plot.scatter(self.lc_df.index, self.lc_df['flux'], s = 2)
 
         legend = ['light curve']
 
-        if overlay_masks:
-            color = 0
-            for key in self.mask_dfs.keys():
-                mask = self.mask_dfs[key]
-                plot.scatter(mask.index, mask['flux'], s = 3, color = f'C{color}')
-                color += 1
-                legend.append(f'{self.star} {key} transit mask')
-
-        if overlay_models:
-            color = 0
-            for key in self.model_dfs.keys():
-                model = self.model_dfs[key]
-                plot.plot(model.index, model['flux'], linewidth = 1.5, color = f'C{color}')
-                color += 1
-
-                legend.append(f'{self.star} {key} lc model')
-
         plot.xlabel('Time (BJD - 2457000)')
         plot.ylabel('Normalized Flux')
-        # plot.legend(legend)
+
+        plot.legend(legend)
 
         if not self.auto_mode:
             plot.show()
@@ -307,7 +292,7 @@ class FinnyExoplanetAnalyzer:
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} Folded Light Curve')
 
-        plot.scatter(self.folded_lc_df.index, self.folded_lc_df['flux'], s = 1.5, color = 'C0')
+        plot.scatter(self.folded_lc_df.index, self.folded_lc_df['flux'], s = 2.5, color = 'C0')
 
         legend = ['folded light curve']
 
@@ -343,9 +328,79 @@ class FinnyExoplanetAnalyzer:
             numpy.floor_divide(self.lc_df.index - self.transit_time.value.item(), self.period),
             numpy.mod(self.lc_df.index - self.transit_time.value.item(), self.period),
             self.folded_lc_df['flux'],
-            cmap = 'viridis', marker = 'o', label = 'Folded Light Curve', alpha = 0.25, s = 1.5)
+            cmap = 'viridis', marker = 'o', label = 'Folded Light Curve', alpha = 0.25, s = 2.5)
         plot.show(); exit()
         '''
+
+        time.sleep(0.1)
+
+    def plot_single_view(self, overlay_current_model = True, overlay_bin = True, save_in_auto = True):
+        fig, axes = plot.subplots(2, 2, figsize = (16, 12))
+        axes[0, 0].set_title(f'{self.star} First Light Curve')
+
+        legend = [f'{self.star} first light curve']
+
+        lc = self.collection[0]
+        lc_df = lc.to_pandas()
+        axes[0, 0].scatter(lc_df.index, lc_df['flux'], s = 2)
+
+        axes[0, 0].set_xlabel('Time (BJD - 2457000)')
+        axes[0, 0].set_ylabel(r'Flux (e$^{-}$s$^{-1}$)')
+
+        axes[0, 0].legend(legend)
+
+        axes[1, 0].set_title(f'{self.star} Folded Light Curve')
+
+        axes[1, 0].scatter(self.folded_lc_df.index, self.folded_lc_df['flux'], s = 2.5, color = 'C0')
+
+        legend = ['folded light curve']
+
+        if overlay_current_model:
+            axes[1, 0].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 1.5, color = 'C1')
+            legend.append(f'{self.star} {self.exoplanet_letter} transit model')
+
+        if overlay_bin:
+            binned_folded_lc = self.folded_lc.bin((self.folded_lc_df.index.max() - self.folded_lc_df.index.min()) / 256)
+            binned_folded_lc_df = binned_folded_lc.to_pandas()
+            axes[1, 0].plot(binned_folded_lc_df.index, binned_folded_lc_df['flux'], linewidth = 1.5, color = 'C2', linestyle = '--')
+            legend.append('binned light curve')
+
+        axes[1, 0].set_xlabel('Phase (days)')
+        axes[1, 0].set_ylabel('Normalized Flux')
+        axes[1, 0].legend(legend)
+
+        axes[0, 1].set_title(f'{self.star} Light Curve')
+
+        axes[0, 1].scatter(self.lc_df.index, self.lc_df['flux'], s = 2)
+
+        legend = ['light curve']
+
+        axes[0, 1].set_xlabel('Time (BJD - 2457000)')
+        axes[0, 1].set_ylabel('Normalized Flux')
+
+        axes[0, 1].legend(legend)
+
+        axes[1, 1].set_title(f'{self.star} Periodogram')
+
+        legend = ['power', 'max_power', 'half_max']
+
+        axes[1, 1].plot(self.p_df['period'], self.p_df['power'], linewidth = 1.5, color = 'C0')
+        axes[1, 1].plot(self.p_df['period'], numpy.linspace(self.p.max_power, self.p.max_power, len(self.p_df['period'])), linewidth = 1.5, color = 'C1')
+        axes[1, 1].plot(self.p_df.loc[self.period_fwhm_indices, 'period'], numpy.linspace(self.p.max_power / 2, self.p.max_power / 2, len(self.p_df.loc[self.period_fwhm_indices, 'period'])), linewidth = 1.5, color = 'C2')
+
+        axes[1, 1].set_xscale('log')
+        axes[1, 1].set_xlabel('Period (log scale)')
+        axes[1, 1].set_ylabel('Power')
+        axes[1, 1].legend(legend)
+
+        if not self.auto_mode:
+            plot.show()
+
+        else:
+            if save_in_auto:
+                self.savefig('single_view', title = f'{self.star} Single View')
+
+            plot.close()
 
         time.sleep(0.1)
 
@@ -368,7 +423,7 @@ class FinnyExoplanetAnalyzer:
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} {self.exoplanet_letter} Transit Depth')
 
-        plot.scatter(self.folded_lc_df.index, self.folded_lc_df['flux'], s = 1.5, color = 'C0')
+        plot.scatter(self.folded_lc_df.index, self.folded_lc_df['flux'], s = 2.5, color = 'C0')
         plot.plot(self.bflc_df.index, self.bflc_df['flux'], color = 'C1')
 
         legend = ['baseline light curve', 'binned light curve']
@@ -460,5 +515,9 @@ class FinnyExoplanetAnalyzer:
 
         return save_paths
 
-    def savefig(self, subfolder):
-        plot.savefig(f'{self.auto_folder}/{subfolder}/{plot.gca().get_title()} @ {datetime.datetime.now().strftime('%B %d, %Y %I:%M:%S %p')}.png', dpi = 100)
+    def savefig(self, subfolder, title = None):
+        if title is None:
+            title = plot.gca().get_title()
+
+        plot.tight_layout()
+        plot.savefig(f'{self.auto_folder}/{subfolder}/{title} @ {datetime.datetime.now().strftime('%B %d, %Y %I:%M:%S %p')}.png', dpi = 100)

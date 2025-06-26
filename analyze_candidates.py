@@ -40,11 +40,12 @@ if __name__ == '__main__':
         analyzer.plot_first_light_curve()
         analyzer.plot_collection()
 
+        # analyzer.plot_stitched_light_curve(overlay_masks = False, overlay_models = False)
+
         # if input('Do you want to process this star? ') not in yes:
         #     continue
 
         log_searchsize = [0.2, 1.75, 4]
-        analyzer.plot_stitched_light_curve(overlay_masks = False, overlay_models = False)
 
         while True:
             analyzer.create_periodogram(log_searchsize = log_searchsize)
@@ -54,6 +55,7 @@ if __name__ == '__main__':
 
             analyzer.fold_light_curve()
             analyzer.plot_folded_light_curve()
+            analyzer.plot_single_view()
 
             if input('Would you like to confirm that this is an exoplanet candidate and continue on? ') in yes:
                 analyzer.mask_exoplanet(analyzer.exoplanet_letter)
@@ -62,7 +64,7 @@ if __name__ == '__main__':
                 analyzer.is_exoplanet()
 
             if input('Continue analyzing the current star? ') in yes:
-                analyzer.plot_stitched_light_curve(overlay_masks = True, overlay_models = False)
+                analyzer.plot_stitched_light_curve()
                 log_searchsize = [numpy.log10(float(x.strip())) for x in input('Enter a new search size for the periodogram in the format min, max, num: ').split(',')]
 
             else:
