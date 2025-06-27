@@ -7,7 +7,7 @@ import pandas
 
 short_period = True
 
-successful_stars_target = 1
+successful_stars_target = 50
 successful_stars = 0
 
 parent_folder = 'CTOI Creation'
@@ -67,7 +67,7 @@ if __name__ == '__main__':
 
         analyzer.plot_stitched_light_curve()
 
-        log_searchsize = [0.2, 1.2, 4] if short_period else [0.75, 1.75, 4] # buffer
+        log_searchsize = [0.2, 1.1, 4] if short_period else [0.75, 1.75, 4] # buffer
         # the short period is from 0.3 to 1, but they could be inaccurate
         # long period includes is only long ones (1 - 1.7)
 

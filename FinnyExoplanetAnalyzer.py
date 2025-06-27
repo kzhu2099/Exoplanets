@@ -2,6 +2,7 @@ import lightkurve
 import numpy
 import matplotlib.pyplot as plot
 import matplotlib.patches as patches
+from matplotlib.gridspec import GridSpec
 import matplotlib
 from cycler import cycler
 import datetime
@@ -42,7 +43,7 @@ class FinnyExoplanetAnalyzer:
             os.makedirs(f'{self.auto_folder}/save_data', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/single_view', exist_ok = True)
 
-        matplotlib.rcParams['figure.figsize'] = (8, 6)
+        matplotlib.rcParams['figure.figsize'] = (12, 8)
         matplotlib.rcParams['font.size'] = 14
         matplotlib.rcParams['axes.prop_cycle'] = cycler(color = ['black'] + matplotlib.rcParams['axes.prop_cycle'].by_key()['color'][1:])
 
@@ -66,7 +67,7 @@ class FinnyExoplanetAnalyzer:
         masked_pixels = numpy.argwhere(aperture_mask)
         for y, x in masked_pixels:
             # Draw a rectangle around each masked pixel
-            rect = patches.Rectangle((x - 0.5, y - 0.5), 1, 1, linewidth = 1.5, edgecolor = 'C1', facecolor = 'none')
+            rect = patches.Rectangle((x - 0.5, y - 0.5), 1, 1, linewidth = 1, edgecolor = 'C1', facecolor = 'none')
             plot.gca().add_patch(rect)
 
             # Draw diagonal lines inside each pixel box
@@ -192,7 +193,7 @@ class FinnyExoplanetAnalyzer:
 
         lc = self.collection[0]
         lc_df = lc.to_pandas()
-        plot.scatter(lc_df.index, lc_df['flux'], s = 2)
+        plot.errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 4, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
 
         plot.xlabel('Time (BJD - 2457000)')
         plot.ylabel(r'Flux (e$^{-}$s$^{-1}$)')
@@ -268,12 +269,11 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['power', 'max_power', 'half_max']
 
-        plot.plot(self.p_df['period'], self.p_df['power'], linewidth = 1.5, color = 'C0')
-        plot.plot(self.p_df['period'], numpy.linspace(self.p.max_power, self.p.max_power, len(self.p_df['period'])), linewidth = 1.5, color = 'C1')
-        plot.plot(self.p_df.loc[self.period_fwhm_indices, 'period'], numpy.linspace(self.p.max_power / 2, self.p.max_power / 2, len(self.p_df.loc[self.period_fwhm_indices, 'period'])), linewidth = 1.5, color = 'C2')
+        plot.plot(self.p_df['period'], self.p_df['power'], linewidth = 1, color = 'C0')
+        plot.plot(self.p_df['period'], numpy.linspace(self.p.max_power, self.p.max_power, len(self.p_df['period'])), linewidth = 3, color = 'C1')
+        plot.plot(self.p_df.loc[self.period_fwhm_indices, 'period'], numpy.linspace(self.p.max_power / 2, self.p.max_power / 2, len(self.p_df.loc[self.period_fwhm_indices, 'period'])), linewidth = 3, color = 'C2')
 
-        plot.gca().set_xscale('log')
-        plot.xlabel('Period (log scale)')
+        plot.xlabel('Period')
         plot.ylabel('Power')
         plot.legend(legend)
 
@@ -292,18 +292,18 @@ class FinnyExoplanetAnalyzer:
         # plot.figure(figsize = (16, 9))
         plot.title(f'{self.star} Folded Light Curve')
 
-        plot.scatter(self.folded_lc_df.index, self.folded_lc_df['flux'], s = 2.5, color = 'C0')
-
         legend = ['folded light curve']
 
+        plot.errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 2, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+
         if overlay_current_model:
-            plot.plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 1.5, color = 'C1')
+            plot.plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
             legend.append(f'{self.star} {self.exoplanet_letter} transit model')
 
         if overlay_bin:
             binned_folded_lc = self.folded_lc.bin((self.folded_lc_df.index.max() - self.folded_lc_df.index.min()) / 256)
             binned_folded_lc_df = binned_folded_lc.to_pandas()
-            plot.plot(binned_folded_lc_df.index, binned_folded_lc_df['flux'], linewidth = 1.5, color = 'C2', linestyle = '--')
+            plot.plot(binned_folded_lc_df.index, binned_folded_lc_df['flux'], linewidth = 3, color = 'C2', linestyle = '--')
             legend.append('binned light curve')
 
         plot.xlabel('Phase (days)')
@@ -335,63 +335,56 @@ class FinnyExoplanetAnalyzer:
         time.sleep(0.1)
 
     def plot_single_view(self, overlay_current_model = True, overlay_bin = True, save_in_auto = True):
-        fig, axes = plot.subplots(2, 2, figsize = (16, 12))
-        axes[0, 0].set_title(f'{self.star} First Light Curve')
+        fig = plot.figure(figsize = (18, 8))
+        grid = GridSpec(2, 2, figure = fig, width_ratios = [2, 1])
+        axes = [
+            fig.add_subplot(grid[:, 0]),
+            fig.add_subplot(grid[0, 1]),
+            fig.add_subplot(grid[1, 1])
+        ]
+
+        axes[0].set_title(f'{self.star} First Light Curve')
 
         legend = [f'{self.star} first light curve']
 
         lc = self.collection[0]
         lc_df = lc.to_pandas()
-        axes[0, 0].scatter(lc_df.index, lc_df['flux'], s = 2)
+        axes[0].errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 4, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
 
-        axes[0, 0].set_xlabel('Time (BJD - 2457000)')
-        axes[0, 0].set_ylabel(r'Flux (e$^{-}$s$^{-1}$)')
+        axes[0].set_xlabel('Time (BJD - 2457000)')
+        axes[0].set_ylabel(r'Flux (e$^{-}$s$^{-1}$)')
 
-        axes[0, 0].legend(legend)
+        axes[0].legend(legend)
 
-        axes[1, 0].set_title(f'{self.star} Folded Light Curve')
-
-        axes[1, 0].scatter(self.folded_lc_df.index, self.folded_lc_df['flux'], s = 2.5, color = 'C0')
+        axes[1].set_title(f'{self.star} Folded Light Curve')
 
         legend = ['folded light curve']
 
+        axes[1].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 2, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+
         if overlay_current_model:
-            axes[1, 0].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 1.5, color = 'C1')
+            axes[1].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
             legend.append(f'{self.star} {self.exoplanet_letter} transit model')
 
         if overlay_bin:
             binned_folded_lc = self.folded_lc.bin((self.folded_lc_df.index.max() - self.folded_lc_df.index.min()) / 256)
             binned_folded_lc_df = binned_folded_lc.to_pandas()
-            axes[1, 0].plot(binned_folded_lc_df.index, binned_folded_lc_df['flux'], linewidth = 1.5, color = 'C2', linestyle = '--')
+            axes[1].plot(binned_folded_lc_df.index, binned_folded_lc_df['flux'], linewidth = 3, color = 'C2', linestyle = '--')
             legend.append('binned light curve')
 
-        axes[1, 0].set_xlabel('Phase (days)')
-        axes[1, 0].set_ylabel('Normalized Flux')
-        axes[1, 0].legend(legend)
-
-        axes[0, 1].set_title(f'{self.star} Light Curve')
-
-        axes[0, 1].scatter(self.lc_df.index, self.lc_df['flux'], s = 2)
-
-        legend = ['light curve']
-
-        axes[0, 1].set_xlabel('Time (BJD - 2457000)')
-        axes[0, 1].set_ylabel('Normalized Flux')
-
-        axes[0, 1].legend(legend)
-
-        axes[1, 1].set_title(f'{self.star} Periodogram')
+        axes[1].set_xlabel('Phase (days)')
+        axes[1].set_ylabel('Normalized Flux')
+        axes[1].legend(legend)
 
         legend = ['power', 'max_power', 'half_max']
 
-        axes[1, 1].plot(self.p_df['period'], self.p_df['power'], linewidth = 1.5, color = 'C0')
-        axes[1, 1].plot(self.p_df['period'], numpy.linspace(self.p.max_power, self.p.max_power, len(self.p_df['period'])), linewidth = 1.5, color = 'C1')
-        axes[1, 1].plot(self.p_df.loc[self.period_fwhm_indices, 'period'], numpy.linspace(self.p.max_power / 2, self.p.max_power / 2, len(self.p_df.loc[self.period_fwhm_indices, 'period'])), linewidth = 1.5, color = 'C2')
+        axes[2].plot(self.p_df['period'], self.p_df['power'], linewidth = 1, color = 'C0')
+        axes[2].plot(self.p_df['period'], numpy.linspace(self.p.max_power, self.p.max_power, len(self.p_df['period'])), linewidth = 3, color = 'C1')
+        axes[2].plot(self.p_df.loc[self.period_fwhm_indices, 'period'], numpy.linspace(self.p.max_power / 2, self.p.max_power / 2, len(self.p_df.loc[self.period_fwhm_indices, 'period'])), linewidth = 3, color = 'C2')
 
-        axes[1, 1].set_xscale('log')
-        axes[1, 1].set_xlabel('Period (log scale)')
-        axes[1, 1].set_ylabel('Power')
-        axes[1, 1].legend(legend)
+        axes[2].set_xlabel('Period')
+        axes[2].set_ylabel('Power')
+        axes[2].legend(legend)
 
         if not self.auto_mode:
             plot.show()
@@ -427,7 +420,7 @@ class FinnyExoplanetAnalyzer:
         plot.plot(self.bflc_df.index, self.bflc_df['flux'], color = 'C1')
 
         legend = ['baseline light curve', 'binned light curve']
-        plot.plot(self.bflc_df.index, numpy.linspace(1 - self.transit_depth, 1 - self.transit_depth, len(self.bflc_df.index)), linewidth = 1.5, color = 'C2')
+        plot.plot(self.bflc_df.index, numpy.linspace(1 - self.transit_depth, 1 - self.transit_depth, len(self.bflc_df.index)), linewidth = 3, color = 'C2')
 
         legend.extend(['transit flux depth'])
 
@@ -519,5 +512,5 @@ class FinnyExoplanetAnalyzer:
         if title is None:
             title = plot.gca().get_title()
 
-        plot.tight_layout()
-        plot.savefig(f'{self.auto_folder}/{subfolder}/{title} @ {datetime.datetime.now().strftime('%B %d, %Y %I:%M:%S %p')}.png', dpi = 100)
+        plot.tight_layout(pad = 0.25)
+        plot.savefig(f'{self.auto_folder}/{subfolder}/{title} @ {datetime.datetime.now().strftime('%B %d, %Y %I:%M:%S %p')}.png', dpi = 150)
