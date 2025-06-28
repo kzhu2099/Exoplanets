@@ -118,6 +118,7 @@ class FinnyExoplanetAnalyzer:
             # collection.append(lc.flatten(niters = 20))
 
         self.lc = self.collection.stitch().flatten(window_length = 501, break_tolerance = 10, niters = 1, sigma = 10).remove_outliers(sigma = 10)
+        self.lc.flux_err = abs(self.lc.flux_err)
         self.lc_df = self.lc.to_pandas()
 
         self.flux_unc = self.lc_df['flux_err'].mean()
