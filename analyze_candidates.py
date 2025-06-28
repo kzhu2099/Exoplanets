@@ -4,7 +4,7 @@ import numpy
 
 candidates = \
 [
-198358825,
+229591303,
 ]
 
 parent_folder = 'CTOI Creation'

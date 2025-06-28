@@ -394,7 +394,7 @@ class FinnyExoplanetAnalyzer:
 
         axes[2].set_xlabel('Phase (days)')
         axes[2].set_ylabel('Normalized Flux')
-        axes[2].set_xlim(-self.transit_duration.value, self.transit_duration.value)
+        axes[2].set_xlim(-2 * self.transit_duration.value, 2 * self.transit_duration.value)
         axes[2].legend(legend)
 
         if not self.auto_mode:

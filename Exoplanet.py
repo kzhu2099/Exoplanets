@@ -21,8 +21,16 @@ class Exoplanet:
         self.transit_time = transit_time.value.item()
         self.transit_duration = transit_duration.value
 
+        self.triceratops = {
+            'period': self.period,
+            'transit_time': self.transit_time,
+            'transit_duration': self.transit_duration
+        }
+
     def add_transit_depth(self, transit_depth):
         self.transit_depth = transit_depth
+
+        self.triceratops['transit_depth'] = self.transit_depth
 
     def add(self, **kwargs):
         for key, value in kwargs.items():
@@ -90,7 +98,7 @@ class Exoplanet:
         self.mass_unc_lower = self.mass - self.min_mass
         self.mass_unc_higher = self.max_mass - self.mass
         self.mass_unc = numpy.abs(self.mass_unc_higher + self.mass_unc_lower) / 2
- 
+
         self.semi_major_axis_meters = (
             (((self.period * DAY_SECOND) ** 2) * 6.674e-11 * (self.host_star['mass'] * SMASS_KG)) /
             (4 * math.pi ** 2)
