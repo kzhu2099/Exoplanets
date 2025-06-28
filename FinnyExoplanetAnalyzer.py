@@ -307,7 +307,7 @@ class FinnyExoplanetAnalyzer:
             plot.plot(binned_folded_lc_df.index, binned_folded_lc_df['flux'], linewidth = 3, color = 'C2', linestyle = '--')
             legend.append('binned light curve')
 
-        plot.xlabel('Phase (days)')
+        plot.xlabel('Time from Transit (days)')
         plot.ylabel('Normalized Flux')
         plot.legend(legend)
 
@@ -373,7 +373,7 @@ class FinnyExoplanetAnalyzer:
             axes[1].plot(binned_folded_lc_df.index, binned_folded_lc_df['flux'], linewidth = 3, color = 'C2', linestyle = '--')
             legend.append('binned light curve')
 
-        axes[1].set_xlabel('Phase (days)')
+        axes[1].set_xlabel('Time from Transit (days)')
         axes[1].set_ylabel('Normalized Flux')
         axes[1].legend(legend)
 
@@ -393,7 +393,7 @@ class FinnyExoplanetAnalyzer:
             axes[2].plot(binned_folded_lc_df.index, binned_folded_lc_df['flux'], linewidth = 3, color = 'C2', linestyle = '--')
             legend.append('binned light curve')
 
-        axes[2].set_xlabel('Phase (days)')
+        axes[2].set_xlabel('Time from Transit (days)')
         axes[2].set_ylabel('Normalized Flux')
         axes[2].set_xlim(-2 * self.transit_duration.value, 2 * self.transit_duration.value)
         axes[2].legend(legend)
@@ -436,7 +436,7 @@ class FinnyExoplanetAnalyzer:
 
         legend.extend(['transit flux depth'])
 
-        plot.xlabel('Phase (days)')
+        plot.xlabel('Time from Transit (days)')
         plot.ylabel('Normalized Flux')
         plot.legend(legend)
 
