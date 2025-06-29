@@ -7,7 +7,7 @@ import pandas
 
 short_period = True
 
-successful_stars_target = 20
+successful_stars_target = 50
 successful_stars = 0
 
 parent_folder = 'CTOI Creation'

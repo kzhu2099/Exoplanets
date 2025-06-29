@@ -117,7 +117,7 @@ class FinnyExoplanetAnalyzer:
             # lc = RegressionCorrector(uncorrected_lc).correct(design_matrix)
             # collection.append(lc.flatten(niters = 20))
 
-        self.lc = self.collection.stitch().flatten(window_length = 501, break_tolerance = 10, niters = 1, sigma = 10).remove_outliers(sigma = 10)
+        self.lc = self.collection.stitch().normalize().flatten(window_length = 501, break_tolerance = 10, niters = 1, sigma = 10).remove_outliers(sigma = 10)
         self.lc.flux_err = abs(self.lc.flux_err)
         self.lc_df = self.lc.to_pandas()
 
@@ -194,7 +194,7 @@ class FinnyExoplanetAnalyzer:
 
         lc = self.collection[0]
         lc_df = lc.to_pandas()
-        plot.errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 4, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        plot.errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
 
         plot.xlabel('Time (BJD - 2457000)')
         plot.ylabel(r'Flux (e$^{-}$s$^{-1}$)')
@@ -295,7 +295,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        plot.errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 2, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        plot.errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
 
         if overlay_current_model:
             plot.plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
@@ -350,7 +350,7 @@ class FinnyExoplanetAnalyzer:
 
         lc = self.collection[0]
         lc_df = lc.to_pandas()
-        axes[0].errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 4, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        axes[0].errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
 
         axes[0].set_xlabel('Time (BJD - 2457000)')
         axes[0].set_ylabel(r'Flux (e$^{-}$s$^{-1}$)')
@@ -361,7 +361,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        axes[1].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 2, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        axes[1].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
 
         if overlay_current_model:
             axes[1].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
@@ -381,7 +381,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        axes[2].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 2, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        axes[2].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
 
         if overlay_current_model:
             axes[2].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')

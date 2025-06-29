@@ -4,7 +4,7 @@ import numpy
 
 candidates = \
 [
-259171171,
+420114774,
 ]
 
 parent_folder = 'CTOI Creation'
@@ -63,7 +63,7 @@ if __name__ == '__main__':
                 analyzer.plot_transit_depth()
                 analyzer.is_exoplanet()
 
-            if input('Continue analyzing the current star? ') in yes:
+            if input('Are you finished with this star? ') not in yes:
                 analyzer.plot_stitched_light_curve()
                 log_searchsize = [numpy.log10(float(x.strip())) for x in input('Enter a new search size for the periodogram in the format min, max, num: ').split(',')]
 
