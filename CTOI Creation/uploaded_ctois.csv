@@ -44,7 +44,9 @@
 # 04-13-2025,11799872,https://exofop.ipac.caltech.edu/tess/target.php?id=11799872
 # 04-30-2025,300291839,https://exofop.ipac.caltech.edu/tess/target.php?id=300291839
 --------
-# Notes:
-# 300291839 is very faint and hard to see.
+# --Notes--
+# 365938088 could have many transits (multi planetary maybe too) but only one prominent single transit
+# hard to discern shape because variable star but flat bottom and not v
 -------
 Date,TIC ID,link
+07-08-2025,365938088,https://exofop.ipac.caltech.edu/tess/target.php?id=365938088
