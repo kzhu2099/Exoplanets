@@ -5,7 +5,7 @@ import time
 
 import pandas
 
-short_period = False
+short_period = True
 
 successful_stars_target = 50
 successful_stars = 0
