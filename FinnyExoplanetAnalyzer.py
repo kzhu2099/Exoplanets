@@ -295,7 +295,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        plot.errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        plot.errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
 
         if overlay_current_model:
             plot.plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
@@ -361,7 +361,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        axes[1].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        axes[1].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
 
         if overlay_current_model:
             axes[1].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
@@ -381,7 +381,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        axes[2].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        axes[2].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
 
         if overlay_current_model:
             axes[2].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
