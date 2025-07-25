@@ -19,9 +19,11 @@ with open('ctoi_targets.txt', 'r') as file:
 
 data = pandas.DataFrame()
 for ticid in ticids:
-    url = f'https://exofop.ipac.caltech.edu/tess/download_planet.php?id={ticid}'
+    ticid = ticid.replace('\n', '')
+    if ticid != '':
+        url = f'https://exofop.ipac.caltech.edu/tess/download_planet.php?id={ticid}'
 
-    data = pandas.concat([data, pandas.read_csv(url, delimiter = '|')])
+        data = pandas.concat([data, pandas.read_csv(url, delimiter = '|')])
 
 data = data.drop_duplicates('Tag')
 data['Name'] = data['Name'] + ': ' + data['Table']
