@@ -23,9 +23,16 @@ for ticid in ticids:
 
     data = pandas.concat([data, pandas.read_csv(url, delimiter = '|')])
 
-data['Name'] = data['Name'] + ': ' + data['Table']
-data = data.sort_values('Name')
 data = data.drop_duplicates('Tag')
+data['Name'] = data['Name'] + ': ' + data['Table']
+data['Date'] = pandas.to_datetime(data['Date'], errors = 'coerce')
+
+data['Group Date'] = data.groupby('Name')['Date'].transform('max')
+
+data = data.sort_values(by = ['Group Date', 'Name', 'Date'], ascending = [False, True, False])
+
+data = data.drop(columns = 'Group Date')
+
 data = data[['Name', 'TOI', 'Disposition', 'Date', 'User', 'Tag']]
 
 css = '''\
@@ -116,8 +123,10 @@ html = f'''\
 </html>
 '''
 
-send_email(sender_email, email_app_password,
-                 'kzhu2099@gmail.com',
-                 'Finny\'s CTOIs',
-                 html,
-                 timezone = 'US/Central')
+send_email(
+    sender_email, email_app_password,
+    'kzhu2099@gmail.com',
+    'Finny\'s CTOIs',
+    html,
+    timezone = 'US/Central'
+)
