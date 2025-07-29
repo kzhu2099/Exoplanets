@@ -37,6 +37,7 @@ class FinnyExoplanetAnalyzer:
             os.makedirs(f'{self.auto_folder}/light_curve_collections', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/stitched_light_curves', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/first_light_curve', exist_ok = True)
+            os.makedirs(f'{self.auto_folder}/individual_light_curves', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/periodograms', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/folded_light_curves', exist_ok = True)
             os.makedirs(f'{self.auto_folder}/transit_depths', exist_ok = True)
@@ -186,6 +187,32 @@ class FinnyExoplanetAnalyzer:
         self.folded_model_df = self.folded_model.to_pandas()
 
         return self.folded_model
+
+    def plot_individual_light_curves(self, limit = 5, save_in_auto = True):
+        for i in range(min(len(self.collection), limit)):
+            plot.title(f'{self.star} Light Curve {i + 1}')
+
+            legend = [f'{self.star} light curve {i + 1}']
+
+            lc = self.collection[i]
+            lc_df = lc.to_pandas()
+            plot.errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+
+            plot.xlabel('Time (BJD - 2457000)')
+            plot.ylabel(r'Flux (e$^{-}$s$^{-1}$)')
+
+            plot.legend(legend)
+
+            if not self.auto_mode:
+                plot.show()
+
+            else:
+                if save_in_auto:
+                    self.savefig('individual_light_curves', title = f'{self.star} Light Curve {i + 1}')
+
+                plot.close()
+
+            time.sleep(0.1)
 
     def plot_first_light_curve(self, save_in_auto = True):
         plot.title(f'{self.star} First Light Curve')

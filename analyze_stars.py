@@ -30,17 +30,17 @@ if __name__ == '__main__':
     while True:
         id_num = ids.iloc[0]
         ids = ids.drop(0).reset_index(drop = True)
-        completed_ids.loc[len(completed_ids)] = id_num
 
-        if id_num in completed_ids:
-            print(f'{id_type} {id_num} is already in the complete IDs, continuing to next...')
+        if id_num in completed_ids.values:
+            print(f'{id_type} {id_num} is already in the completed IDs, continuing to next...')
 
             if len(ids) <= 0:
                 print(f'No more {id_type} IDs, finishing program.')
                 break
 
-            else:
-                continue
+            continue
+
+        completed_ids.loc[len(completed_ids)] = id_num
 
         star_id = f'{id_type} {id_num}'
         analyzer = FinnyExoplanetAnalyzer(star_id, auto_mode = True, auto_folder = auto_folder)
@@ -54,7 +54,6 @@ if __name__ == '__main__':
 
         if light_curve is None:
             print(f'No data that matches the filter for {star_id}, continuing to next star for efficiency.')
-
             continue
 
         else:
@@ -62,7 +61,8 @@ if __name__ == '__main__':
             print('-' * 50)
             print(f'Analyzing {star_id} ({successful_stars} / {successful_stars_target}).')
 
-        analyzer.plot_first_light_curve()
+        analyzer.plot_individual_light_curves(limit = 5)
+        # analyzer.plot_first_light_curve()
         # analyzer.plot_collection()
 
         analyzer.plot_stitched_light_curve()
@@ -77,11 +77,11 @@ if __name__ == '__main__':
         analyzer.create_transit_model(analyzer.exoplanet_letter)
 
         analyzer.fold_light_curve()
-        analyzer.plot_folded_light_curve()
+        # analyzer.plot_folded_light_curve()
         analyzer.plot_single_view()
 
         analyzer.get_transit_depth()
-        analyzer.plot_transit_depth()
+        # analyzer.plot_transit_depth()
 
         analyzer.is_exoplanet()
         analyzer.save(auto_folder)
