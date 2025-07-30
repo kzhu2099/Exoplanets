@@ -9,7 +9,8 @@ import datetime
 import os
 import time
 
-from lightkurve import search_targetpixelfile, DesignMatrix, RegressionCorrector
+from lightkurve import search_targetpixelfile#, DesignMatrix, RegressionCorrector
+from lightkurve.correctors import PLDCorrector
 from astropy.visualization import ZScaleInterval
 
 from Exoplanet import Exoplanet
@@ -110,9 +111,12 @@ class FinnyExoplanetAnalyzer:
 
         for pixel_file in self.pixel_files:
             pixel_file = pixel_file[numpy.isfinite(pixel_file.flux).all(axis = (1, 2))]
-            uncorrected_lc = pixel_file.to_lightcurve(aperture_mask = pixel_file.pipeline_mask)
 
-            self.collection.append(uncorrected_lc)
+            corrected_lc = PLDCorrector(pixel_file).correct()
+            self.collection.append(corrected_lc)
+
+            # uncorrected_lc = pixel_file.to_lightcurve(aperture_mask = pixel_file.pipeline_mask)
+            # self.collection.append(uncorrected_lc)
 
             # design_matrix = DesignMatrix(pixel_file.flux[:, ~aperture_mask]).pca(5).append_constant()
             # lc = RegressionCorrector(uncorrected_lc).correct(design_matrix)
