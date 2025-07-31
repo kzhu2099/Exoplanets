@@ -53,10 +53,25 @@ class Exoplanet:
 
         return exoplanet
 
+    def convert_numpy_types(self, obj):
+        if isinstance(obj, dict):
+            return {k: self.convert_numpy_types(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self.convert_numpy_types(i) for i in obj]
+        elif isinstance(obj, numpy.integer):
+            return int(obj)
+        elif isinstance(obj, numpy.floating):
+            return float(obj)
+        elif isinstance(obj, numpy.ndarray):
+            return obj.tolist()
+        else:
+            return obj
+
     def to_json(self, filepath):
         self.remove_nan()
 
         attributes = {attr: getattr(self, attr) for attr in self.__dict__}
+        attributes = self.convert_numpy_types(attributes)
         result = json.dumps(attributes, indent = 4, sort_keys = True)
         result = result.replace('NaN', 'null')
 
