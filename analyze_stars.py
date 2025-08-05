@@ -7,7 +7,7 @@ import pandas
 
 short_period = False
 
-successful_stars_target = 1
+successful_stars_target = 50
 successful_stars = 0
 
 parent_folder = 'CTOI Creation'
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         light_curve = analyzer.create_light_curve(limit = 5)
 
         if light_curve is None:
-            print(f'No data that matches the filter for {star_id}, continuing to next star for efficiency.')
+            print(f'No data that matches the filter for {star_id} or there was an error, continuing to next star for efficiency.')
             continue
 
         else:
@@ -61,7 +61,7 @@ if __name__ == '__main__':
             print('-' * 50)
             print(f'Analyzing {star_id} ({successful_stars} / {successful_stars_target}).')
 
-        analyzer.plot_individual_light_curves(limit = 5)
+        analyzer.plot_individual_light_curves(limit = 5) # higher limit means that it must already have been looked at a lot, and if I can't find it in the first few it must not be there
         # analyzer.plot_first_light_curve()
         # analyzer.plot_collection()
 

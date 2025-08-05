@@ -97,48 +97,56 @@ class FinnyExoplanetAnalyzer:
         exit()
 
     def create_light_curve(self, limit = 5):
-        self.search_result = lightkurve.search_lightcurve(self.star, mission = 'TESS', cadence = 'long')
+        try:
+            self.search_result = lightkurve.search_lightcurve(self.star, mission = 'TESS', cadence = 'long')
 
-        self.sector_dict = defaultdict(list)
+            if self.search_result is None:
+                return None
 
-        for entry in self.search_result:
-            sector = entry.table['sequence_number'][0]
-            self.sector_dict[sector].append(entry)
+            self.sector_dict = defaultdict(list)
 
-        self.best_lightcurves = []
-        for sector, entries in self.sector_dict.items():
-            best = None
+            for entry in self.search_result:
+                sector = entry.table['sequence_number'][0]
+                self.sector_dict[sector].append(entry)
 
-            for entry in entries:
-                if entry.author == 'SPOC' or entry.author == 'TESS-SPOC':
-                    best = entry
-                    break
+            self.best_lightcurves = []
+            for sector, entries in self.sector_dict.items():
+                best = None
 
-            if not best:
-                best = entries[0]
+                for entry in entries:
+                    if entry.author == 'SPOC' or entry.author == 'TESS-SPOC':
+                        best = entry
+                        break
 
-            self.best_lightcurves.append(best)
+                if not best:
+                    best = entries[0]
 
-        self.best_lightcurves = self.best_lightcurves[:limit]
+                self.best_lightcurves.append(best)
 
-        self.collection = lightkurve.LightCurveCollection(None)
-        for entry in self.best_lightcurves:
-            lc = entry.download().normalize()
+            self.best_lightcurves = self.best_lightcurves[:limit]
 
-            lc = lc[numpy.isfinite(lc.flux)]
-            lc = lc[numpy.isfinite(lc.flux_err)]
+            self.collection = lightkurve.LightCurveCollection(None)
+            for entry in self.best_lightcurves[:limit]:
+                lc = entry.download().normalize()
 
-            self.collection.append(lc)
+                lc = lc[numpy.isfinite(lc.flux)]
+                lc = lc[numpy.isfinite(lc.flux_err)]
 
-        self.collection
+                self.collection.append(lc)
 
-        self.lc = self.collection.stitch().normalize()#.flatten(window_length = 501, break_tolerance = 10, niters = 1, sigma = 10).remove_outliers(sigma = 10)
-        self.lc.flux_err = abs(self.lc.flux_err)
-        self.lc_df = self.lc.to_pandas()
+            self.collection
 
-        self.flux_unc = self.lc_df['flux_err'].mean()
+            self.lc = self.collection.stitch().normalize()#.flatten(window_length = 501, break_tolerance = 10, niters = 1, sigma = 10).remove_outliers(sigma = 10)
+            self.lc.flux_err = abs(self.lc.flux_err)
+            self.lc_df = self.lc.to_pandas()
 
-        return self.lc
+            self.flux_unc = self.lc_df['flux_err'].mean()
+
+            return self.lc
+
+        except Exception as e:
+            print(f'Error: {e}')
+            return None
 
     def create_periodogram(self, log_searchsize = [0.5, 1.7, 4]):
         log_searchsize[2] = int(log_searchsize[2])
@@ -204,13 +212,13 @@ class FinnyExoplanetAnalyzer:
 
     def plot_individual_light_curves(self, limit = 5, save_in_auto = True):
         for i in range(min(len(self.collection), limit)):
-            plot.title(f'{self.star} Light Curve {i + 1}')
+            plot.title(f'{self.star} Light Curve {i}')
 
-            legend = [f'{self.star} light curve {i + 1}']
+            legend = [f'{self.star} light curve {i}']
 
             lc = self.collection[i]
             lc_df = lc.to_pandas()
-            plot.errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+            plot.errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.5, fmt = 'o', color = 'C0', zorder = 0)
 
             plot.xlabel('Time (BJD - 2457000)')
             plot.ylabel(r'Flux (e$^{-}$s$^{-1}$)')
@@ -222,11 +230,11 @@ class FinnyExoplanetAnalyzer:
 
             else:
                 if save_in_auto:
-                    self.savefig('individual_light_curves', title = f'{self.star} Light Curve {i + 1}')
+                    self.savefig('individual_light_curves', title = f'{self.star} Light Curve {i}')
 
                 plot.close()
 
-            time.sleep(0.1)
+            time.sleep(0.25)
 
     def plot_first_light_curve(self, save_in_auto = True):
         plot.title(f'{self.star} First Light Curve')
@@ -235,7 +243,7 @@ class FinnyExoplanetAnalyzer:
 
         lc = self.collection[0]
         lc_df = lc.to_pandas()
-        plot.errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        plot.errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.5, fmt = 'o', color = 'C0', zorder = 0)
 
         plot.xlabel('Time (BJD - 2457000)')
         plot.ylabel(r'Flux (e$^{-}$s$^{-1}$)')
@@ -251,7 +259,7 @@ class FinnyExoplanetAnalyzer:
 
             plot.close()
 
-        time.sleep(0.1)
+        time.sleep(0.25)
 
     def plot_collection(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
@@ -262,7 +270,7 @@ class FinnyExoplanetAnalyzer:
         for i, lc in enumerate(self.collection):
             lc_df = lc.to_pandas()
             plot.scatter(lc_df.index, lc_df['flux'], s = 2)
-            legend.append(f'{self.star} light curve #{i + 1}')
+            legend.append(f'{self.star} light curve {i}')
 
         plot.xlabel('Time (BJD - 2457000)')
         plot.ylabel(r'Flux (e$^{-}$s$^{-1}$)')
@@ -279,7 +287,7 @@ class FinnyExoplanetAnalyzer:
 
             plot.close()
 
-        time.sleep(0.1)
+        time.sleep(0.25)
 
     def plot_stitched_light_curve(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
@@ -303,7 +311,7 @@ class FinnyExoplanetAnalyzer:
 
             plot.close()
 
-        time.sleep(0.1)
+        time.sleep(0.25)
 
     def plot_periodogram(self, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
@@ -328,7 +336,7 @@ class FinnyExoplanetAnalyzer:
 
             plot.close()
 
-        time.sleep(0.1)
+        time.sleep(0.25)
 
     def plot_folded_light_curve(self, overlay_current_model = True, overlay_bin = True, save_in_auto = True):
         # plot.figure(figsize = (16, 9))
@@ -336,7 +344,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        plot.errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
+        plot.errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.5, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
 
         if overlay_current_model:
             plot.plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
@@ -374,7 +382,7 @@ class FinnyExoplanetAnalyzer:
         plot.show(); exit()
         '''
 
-        time.sleep(0.1)
+        time.sleep(0.25)
 
     def plot_single_view(self, overlay_current_model = True, overlay_bin = True, save_in_auto = True):
         fig = plot.figure(figsize = (24, 8))
@@ -391,7 +399,7 @@ class FinnyExoplanetAnalyzer:
 
         lc = self.collection[0]
         lc_df = lc.to_pandas()
-        axes[0].errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0)
+        axes[0].errorbar(lc_df.index, lc_df['flux'], yerr = lc_df['flux_err'], ms = 1, elinewidth = 0.5, fmt = 'o', color = 'C0', zorder = 0)
 
         axes[0].set_xlabel('Time (BJD - 2457000)')
         axes[0].set_ylabel(r'Flux (e$^{-}$s$^{-1}$)')
@@ -402,7 +410,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        axes[1].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
+        axes[1].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.5, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
 
         if overlay_current_model:
             axes[1].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
@@ -422,7 +430,7 @@ class FinnyExoplanetAnalyzer:
 
         legend = ['folded light curve']
 
-        axes[2].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.25, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
+        axes[2].errorbar(self.folded_lc_df.index, self.folded_lc_df['flux'], yerr = self.folded_lc_df['flux_err'], ms = 1, elinewidth = 0.5, fmt = 'o', color = 'C0', zorder = 0, alpha = 0.7)
 
         if overlay_current_model:
             axes[2].plot(self.folded_model_df.index, self.folded_model_df['flux'], linewidth = 3, color = 'C1')
@@ -448,7 +456,7 @@ class FinnyExoplanetAnalyzer:
 
             plot.close()
 
-        time.sleep(0.1)
+        time.sleep(0.25)
 
     def get_transit_depth(self):
         # FINDS MINIMUM BINNED (GET MIDDLE VS. NOISE), WITHIN THE PERIOD / TRANSIT (NOT NOISE)
@@ -490,7 +498,7 @@ class FinnyExoplanetAnalyzer:
 
             plot.close()
 
-        time.sleep(0.1)
+        time.sleep(0.25)
 
     def is_exoplanet(self):
         exoplanet = Exoplanet(

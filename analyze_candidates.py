@@ -29,8 +29,7 @@ if __name__ == '__main__':
         light_curve = analyzer.create_light_curve(limit = 10)
 
         if light_curve is None:
-            print(f'Error encountered when a creating light curve for {star_id}.')
-            print('Skipping this star.')
+            print(f'No data that matches the filter for {star_id} or there was an error, continuing to next star for efficiency.')
             continue
 
         else:
