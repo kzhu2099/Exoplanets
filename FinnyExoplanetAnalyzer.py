@@ -111,19 +111,26 @@ class FinnyExoplanetAnalyzer:
 
             self.best_lightcurves = []
             for sector, entries in self.sector_dict.items():
-                best = None
+                spoc = None
+                qlp = None
 
                 for entry in entries:
-                    if entry.author == 'SPOC' or entry.author == 'TESS-SPOC':
-                        best = entry
+                    if entry.author == 'SPOC' or entry.author == 'TESS-SPOC' or entry.author == 'TESS':
+                        spoc = entry
                         break
 
-                if not best:
-                    best = entries[0]
+                    elif entry.author == 'QLP':
+                        qlp == entry
 
-                self.best_lightcurves.append(best)
+                if spoc: # spoc priority first
+                    self.best_lightcurves.append(spoc)
+
+                elif qlp:
+                    self.best_lightcurves.append(qlp)
 
             self.best_lightcurves = self.best_lightcurves[:limit]
+            if self.best_lightcurves == None:
+                return None
 
             self.collection = lightkurve.LightCurveCollection(None)
             for entry in self.best_lightcurves[:limit]:
@@ -154,7 +161,7 @@ class FinnyExoplanetAnalyzer:
         durations = numpy.logspace(log_searchsize[0] - 1, log_searchsize[0] - 0.5, 10, base = 10)
 
         self.p = self.lc.to_periodogram(method = 'boxleastsquares', period = periods, duration = durations, frequency_factor = 10 ** 6) # the actual periodogram for plot
-        self.p_df = self.p.to_table().to_pandas()
+        self.p_df = self.p.to_table().to_pandas() # only this one needs to_table()
 
         period = self.p.period_at_max_power.value # accurate period to find duration
         durations = numpy.logspace(numpy.log10(period) - 2, numpy.log10(period) - 0.5, 10 ** 4, base = 10)
