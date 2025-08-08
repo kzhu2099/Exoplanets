@@ -115,12 +115,12 @@ class FinnyExoplanetAnalyzer:
                 qlp = None
 
                 for entry in entries:
-                    if entry.author == 'SPOC' or entry.author == 'TESS-SPOC' or entry.author == 'TESS':
-                        spoc = entry
-                        break
+                    match entry.author:
+                        case 'SPOC' | 'TESS-SPOC' | 'TESS':
+                            spoc = entry
 
-                    elif entry.author == 'QLP':
-                        qlp == entry
+                        case 'QLP':
+                            qlp = entry
 
                 if spoc: # spoc priority first
                     self.best_lightcurves.append(spoc)
