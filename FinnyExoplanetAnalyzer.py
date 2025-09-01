@@ -129,7 +129,7 @@ class FinnyExoplanetAnalyzer:
                     self.best_lightcurves.append(qlp)
 
             self.best_lightcurves = self.best_lightcurves[:limit]
-            if self.best_lightcurves == None:
+            if self.best_lightcurves is None:
                 return None
 
             self.collection = lightkurve.LightCurveCollection(None)
@@ -139,9 +139,11 @@ class FinnyExoplanetAnalyzer:
                 lc = lc[numpy.isfinite(lc.flux)]
                 lc = lc[numpy.isfinite(lc.flux_err)]
 
-                self.collection.append(lc)
+                if lc.time.shape != (0,):
+                    self.collection.append(lc)
 
-            self.collection
+            if len(self.collection) == 0:
+                return None
 
             self.lc = self.collection.stitch().normalize()#.flatten(window_length = 501, break_tolerance = 10, niters = 1, sigma = 10).remove_outliers(sigma = 10)
             self.lc.flux_err = abs(self.lc.flux_err)
