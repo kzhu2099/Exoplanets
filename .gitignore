@@ -1,15 +1,7 @@
-CTOI Creation/Candidates
-# CTOI Creation/Current IDs
-CTOI Creation/Mass Analysis
-# CTOI Creation/Results
-# CTOI Creation/TIC ID Data
-CTOI Creation/TIC ID Data/Saved Downloads
-
-Exotic/
-.venv/
+.DS_Store
 __pycache__/
-
-**/.DS_Store
-
-eaConf.json
-pl_names.json
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
