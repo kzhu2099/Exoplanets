@@ -1,51 +1,107 @@
 # Exoplanets
 
-This is where I keep my work with TESS exoplanet candidates.
+My working repository for TESS exoplanet research.
 
-I started with scripts for looking through transit signals. As I kept working, I added candidate review, light-curve processing, false-positive checks, stellar analysis, and experiments with exoplanet characterization. Some of the older work is still here because I want the repository to show how the project developed, not just the final version of it.
+This started as a place to keep my TESS exoplanet-analysis code and has grown to include candidate analysis, mass estimation, CTOI work, exploratory notebooks, and the results produced while running the different parts of the project.
 
-## Code
+The root-level Python files contain most of the reusable analysis code. The notebooks are where I have developed or tested particular parts of the analysis. `CTOI Creation` contains the larger collection of results and intermediate products generated from running that code.
 
-`FinnyExoplanetAnalyzer.py` is the main TESS light-curve analysis code. It finds and combines TESS observations, searches for periods with BLS, folds the data, builds transit models, and saves candidate results.
+## Python
 
-`Exoplanet.py` stores candidate and host-star parameters and calculates quantities used when looking at a candidate's physical properties.
+### `FinnyExoplanetAnalyzer.py`
 
-`analyze_candidates.py` is the interactive candidate-review script. It shows the light curve and periodogram for selected TICs, lets me adjust the search, and saves candidates for later processing.
+The main TESS light-curve analyzer. It retrieves TESS light curves from MAST, cleans and normalizes them, stitches observations from different sectors, and searches for transit signals with Box Least Squares.
 
-`analyze_stars.py` runs the analysis over larger lists of TICs and saves the results from each run.
+The BLS search starts with a broad period range and then searches around the strongest signal to refine the period and transit duration. The resulting signal can be folded, modeled, plotted, and measured.
 
-`email_ctois.py` collects CTOI information from ExoFOP and sends the results by email.
+The analyzer also supports masking a detected transit before running another search. This lets me look for additional periodic signals in the same target rather than only keeping the strongest signal in the periodogram.
+
+### `Exoplanet.py`
+
+Contains the candidate object and the calculations used after finding a transit signal.
+
+The class stores the measured transit and host-star properties and calculates quantities such as \(R_p/R_\star\), planetary radius, estimated mass, semi-major axis, and equilibrium temperature.
+
+For transit fitting, it uses `batman` and `scipy.optimize.least_squares`. The transit model includes the orbital geometry and quadratic limb darkening, and the fitted transit parameters are then used for the physical-parameter calculations. Masses are estimated with ExoRM.
+
+This is also where the candidate information is converted into the format used later in the CTOI processing.
+
+### `analyze_candidates.py`
+
+Used for working through individual targets. It runs the main analyzer, saves the diagnostic products, and lets me inspect candidates and rerun the search when the initial period or signal is not convincing.
+
+### `analyze_stars.py`
+
+Runs the same analysis over larger target lists. It keeps track of completed targets and saves the resulting light curves, periodograms, candidate data, and other products.
 
 ## Notebooks
 
-`process_ids.ipynb` works through TESS TCE data and filters targets before they are analyzed.
+### `analyze_optimized.ipynb`
 
-`process_ctois.ipynb` takes saved candidates, adds host-star information, and prepares the files used for CTOI uploads.
+Additional candidate-vetting work developed around the main analyzer. This contains tests for things such as transit shape, odd/even transit depths, secondary eclipses, harmonics, stellar variability, contamination, and cases where the initial period or physical parameters need another look.
 
-`analyze_triceratops.ipynb` checks candidates with TRICERATOPS and looks at the false-positive scenarios.
+It also contains experiments with different detrending and outlier-removal approaches for difficult light curves.
 
-`analyze_optimized.ipynb` contains experiments for checking candidate signals, including possible V-shaped events, secondary eclipses, contamination, period problems, and other reasons a transit signal might not be planetary.
+### `analyze_triceratops.ipynb`
 
-`analyze_variables.ipynb` looks at variability in TESS target-pixel data using Lomb-Scargle periodograms.
+False-positive analysis using TRICERATOPS.
 
-`correlation.ipynb` uses confirmed exoplanet measurements from the NASA Exoplanet Archive to explore relationships between planetary properties.
+The notebook takes candidate transit signals and compares different astrophysical explanations for them, including planetary and eclipsing-binary scenarios involving the target or nearby stars. It uses the target's TESS data together with information about neighboring sources when calculating the scenario probabilities.
 
-## CTOI Creation
+### `analyze_variables.ipynb`
 
-`Candidates/` contains saved candidate analyses.
+Used to investigate periodic stellar variability separately from the transit search. It uses Lomb-Scargle periodograms on TESS light curves and folds the data on the resulting periods. I also use it to check harmonic interpretations of signals that may not have an obvious single period.
 
-`Current IDs/` contains the lists used to keep track of which TICs were being analyzed.
+### `process_ctois.ipynb`
 
-`Mass Analysis/` contains the larger analysis runs. The `2025/` directory is kept as a record of the work from that year, with each run stored under its date.
+Processes the candidates produced by the earlier analysis.
 
-`Results/` contains the saved outputs. The folders inside it separate the general data, false-positive results, and files prepared for uploads.
+It retrieves additional stellar information from MAST and can work directly with TESS target-pixel files. The notebook constructs aperture light curves from the pixels and includes a PCA-based correction with `DesignMatrix` and `RegressionCorrector`. The corrected light curves can then be passed back into the transit model in `Exoplanet.py`.
 
-`Source Data/` contains the TESS and ExoFOP tables used to build and filter candidate lists.
+It also handles the candidate JSON data, generated plots, and tabular files used in the CTOI workflow.
 
-## ExoRM
+### `process_ids.ipynb`
 
-`Paper Material/ExoRM/` contains the figures, tables, and notebooks from my ExoRM mass-radius modeling work.
+Prepares the target lists used by the rest of the project. It combines the relevant TESS candidate and TCE information, cleans the TIC IDs, removes duplicates, and produces the lists used by the analysis scripts.
 
-## Notes
+### `correlation.ipynb`
 
-This is research code, not a finished software package. Some of the experiments worked and some did not. I have kept older code and analysis because it records what I actually tried.
+Exploratory work using the NASA Exoplanet Archive. It is separate from the TESS candidate pipeline and is used to look at relationships between properties of known exoplanets.
+
+## `CTOI Creation`
+
+This is the main archive of the results produced while running the candidate and mass-analysis workflow.
+
+Rather than putting all of the output into one directory, the work is grouped by analysis type and then by when the analysis was run. This makes it possible to keep results from different stages of the project without replacing earlier work.
+
+### `CTOI Creation/Mass Analysis`
+
+This contains the outputs from the mass and candidate analysis.
+
+The directory is organized chronologically. The folders are separated by year and month, and individual analysis runs are stored under their run date. Within a run, different kinds of products are kept separately.
+
+`stitched_light_curves/` contains the combined TESS light curves produced from the available observations for each target. These are the working light curves used for the later period and transit analysis.
+
+`transit_depths/` contains the plots and measurements used to inspect the depth of the detected transit signals. The transit depth is one of the main quantities used later to estimate \(R_p/R_\star\) and the planetary radius.
+
+As the analysis developed, additional output folders were added for other products. The dated structure is intentional: these files are research outputs and intermediate results, not just temporary files that can always be regenerated in exactly the same form.
+
+## `Paper Material/ExoRM`
+
+Contains the material associated with my ExoRM work, including the analysis used to develop and test the mass-radius model.
+
+## Other files
+
+### `exoplanets.csv`
+
+A local copy of the exoplanet catalog used for the broader population analysis.
+
+### `email_ctois.py`
+
+Utility code used for the administrative side of the CTOI workflow.
+
+## Dependencies
+
+The main TESS analysis uses Lightkurve, Astropy, astroquery, batman, SciPy, wotan, TRICERATOPS, and ExoRM.
+
+The code was written around my own research workflow, so some scripts contain local paths or assumptions that may need to be changed when running them elsewhere.
