@@ -1,1 +1,2 @@
+CTOI[[:space:]]Creation/Mass[[:space:]]Analysis filter=lfs diff=lfs merge=lfs -text
 CTOI[[:space:]]Creation/Mass[[:space:]]Analysis/** filter=lfs diff=lfs merge=lfs -text
