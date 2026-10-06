@@ -1,10 +1,14 @@
 # Exoplanets
 
-My working repository for TESS exoplanet research.
+# Exoplanets
 
-This started as a place to keep my TESS exoplanet-analysis code and has grown to include candidate analysis, mass estimation, CTOI work, exploratory notebooks, and the results produced while running the different parts of the project.
+> **Past research project.** This project was developed primarily in 2025 as an earlier stage of my research. I focused on building Python tools to search TESS data for possible transiting exoplanets, analyze transit signals, and develop candidate-vetting workflows.
 
-The root-level Python files contain most of the reusable analysis code. The notebooks are where I have developed or tested particular parts of the analysis. `CTOI Creation` contains the larger collection of results and intermediate products generated from running that code.
+> This is no longer my active research repository. Since working on this project, I have moved on to other research questions and projects, including transit timing, binary-star and stellar-variability studies, asteroseismology, and other follow up projects. My current work is focused on characterizing and understanding systems rather than searching TESS data for new exoplanet candidates. Nonetheless, this project was still extremely important for my own growth and devlopment as a researcher.
+
+This repository contains the code and results from that earlier TESS exoplanet-analysis work.
+
+The project began as a place to develop and organize my TESS analysis code and came to include candidate analysis, mass estimation, CTOI work, exploratory notebooks, and the results produced while running the different parts of the project.
 
 ## Python
 
